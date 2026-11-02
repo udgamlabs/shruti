@@ -1,6 +1,6 @@
 # Release notes
 
-## 1.1.0: Shruti Marathi joins the family (draft, date set at release)
+## 1.1.0: Shruti Marathi joins the family (2 November 2026)
 
 - **Shruti Marathi** (`shruti-marathi.cact`, 29.7 MB, [udgamlabs/shruti-marathi](https://huggingface.co/udgamlabs/shruti-marathi)):
   Marathi and English speech to text, English words in English. Results in `docs/marathi.md`.
