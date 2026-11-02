@@ -1,6 +1,13 @@
 # Release notes
 
-## 1.2.0: Shruti Tamil joins the family (4 November 2026)
+## 1.3.0: Shruti Bengali joins the family (3 November 2026)
+
+- **Shruti Bengali** (`shruti-bengali.cact`, 29.7 MB, [udgamlabs/shruti-bengali](https://huggingface.co/udgamlabs/shruti-bengali)):
+  Bengali and English speech to text, English words in English. Results in `docs/bengali.md`.
+- Examples: `transcribe.py --model bengali`, `SHRUTI_MODEL=bengali ./transcribe.sh`, and `?model=bengali` in the browser
+  example. `SHA256SUMS` lists the Bengali file.
+
+## 1.2.0: Shruti Tamil joins the family (3 November 2026)
 
 - **Shruti Tamil** (`shruti-tamil.cact`, 29.7 MB, [udgamlabs/shruti-tamil](https://huggingface.co/udgamlabs/shruti-tamil)):
   Tamil and English speech to text, English words in English. Results in `docs/tamil.md`.

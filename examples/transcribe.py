@@ -5,6 +5,7 @@
     python transcribe.py clip.wav                     # Shruti Hindi; language detected automatically
     python transcribe.py clip.wav --model marathi     # Shruti Marathi (Marathi and English)
     python transcribe.py clip.wav --model tamil       # Shruti Tamil (Tamil and English)
+    python transcribe.py clip.wav --model bengali     # Shruti Bengali (Bengali and English)
     python transcribe.py english.wav --language en    # only for speech that is all English
 
 The first run downloads the model file (shruti.cact, 29.5 MB, from udgamlabs/Shruti; or shruti-marathi.cact, 29.7 MB,
@@ -33,6 +34,8 @@ MODELS = {
                 "f51a92944cc25515e703518cfef5ec9c52bf0db4cf91741530ebdded1df5bb05", "mr"),
     "tamil": ("udgamlabs/shruti-tamil", "shruti-tamil.cact",
               "8202f454350fb9ca2d2115ef5e81332c99de93b7c2f7c06fc9d2457995a4dec8", "ta"),
+    "bengali": ("udgamlabs/shruti-bengali", "shruti-bengali.cact",
+                "0a423c25f534e2099b43bc4e826018978c44a9f523cea19125686883a2a7c572", "bn"),
 }
 
 
@@ -50,11 +53,11 @@ def model_path(name: str) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Offline speech to text with Shruti Hindi or Shruti Marathi.")
+    parser = argparse.ArgumentParser(description="Offline speech to text with a Shruti model (Hindi, Marathi, Tamil or Bengali, each with English).")
     parser.add_argument("wav", help="a WAV file")
     parser.add_argument("--model", choices=sorted(MODELS), default="hindi",
-                        help="hindi: Hindi, English and Hinglish (default); marathi: Marathi and English; tamil: Tamil and English")
-    parser.add_argument("--language", choices=["hi", "mr", "ta", "en"], default=None,
+                        help="hindi: Hindi, English and Hinglish (default); marathi: Marathi and English; tamil: Tamil and English; bengali: Bengali and English")
+    parser.add_argument("--language", choices=["hi", "mr", "ta", "bn", "en"], default=None,
                         help="leave unset to detect it; 'en' helps only for speech that is entirely English")
     parser.add_argument("--keywords", default=None,
                         help="comma-separated names or terms to favour, e.g. 'Shruti, Udgam Labs'")

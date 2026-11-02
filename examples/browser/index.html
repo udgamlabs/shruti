@@ -77,11 +77,13 @@ const MODELS = {
     'f51a92944cc25515e703518cfef5ec9c52bf0db4cf91741530ebdded1df5bb05', 29659445],
   tamil: ['https://huggingface.co/udgamlabs/shruti-tamil/resolve/main/shruti-tamil.cact',
     '8202f454350fb9ca2d2115ef5e81332c99de93b7c2f7c06fc9d2457995a4dec8', 29743335],
+  bengali: ['https://huggingface.co/udgamlabs/shruti-bengali/resolve/main/shruti-bengali.cact',
+    '0a423c25f534e2099b43bc4e826018978c44a9f523cea19125686883a2a7c572', 29742459],
 }
 const [MODEL_URL, MODEL_SHA256, MODEL_BYTES] = MODELS[new URLSearchParams(location.search).get('model')] || MODELS.hindi
 const CACHE_NAME = 'shruti-example-v1' // the same name as in shruti-worker.js
 const SR = 16000 // the engine takes 16 kHz mono float samples in [-1, 1]
-const LANGUAGES = { hi: 'Hindi', mr: 'Marathi', ta: 'Tamil', en: 'English' }
+const LANGUAGES = { hi: 'Hindi', mr: 'Marathi', ta: 'Tamil', bn: 'Bengali', en: 'English' }
 
 const $ = (id) => document.getElementById(id)
 const ui = { load: $('load'), record: $('record'), file: $('file'), progress: $('progress'), status: $('status'),

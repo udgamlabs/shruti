@@ -19,16 +19,17 @@ checksums.
 ## The Shruti family
 
 One small model per language, each with English, all in the same engine. This repository covers all of them; the
-sections below describe Shruti Hindi; [docs/marathi.md](docs/marathi.md) and [docs/tamil.md](docs/tamil.md) have Shruti Marathi's and Shruti Tamil's results.
+sections below describe Shruti Hindi; [docs/marathi.md](docs/marathi.md), [docs/tamil.md](docs/tamil.md) and [docs/bengali.md](docs/bengali.md) have Shruti Marathi's, Shruti Tamil's and Shruti Bengali's results.
 
 | Model | File | Speech | Weights |
 |---|---|---|---|
 | **Shruti Hindi** | `shruti.cact`, 29.5 MB | Hindi, English, Hinglish | [udgamlabs/Shruti](https://huggingface.co/udgamlabs/Shruti) |
 | **Shruti Marathi** | `shruti-marathi.cact`, 29.7 MB | Marathi, English, and the two mixed | [udgamlabs/shruti-marathi](https://huggingface.co/udgamlabs/shruti-marathi) |
 | **Shruti Tamil** | `shruti-tamil.cact`, 29.7 MB | Tamil, English, and the two mixed | [udgamlabs/shruti-tamil](https://huggingface.co/udgamlabs/shruti-tamil) |
+| **Shruti Bengali** | `shruti-bengali.cact`, 29.7 MB | Bengali, English, and the two mixed | [udgamlabs/shruti-bengali](https://huggingface.co/udgamlabs/shruti-bengali) |
 
 ```bash
-python examples/transcribe.py clip.wav --model marathi        # Python (or --model tamil)
+python examples/transcribe.py clip.wav --model marathi        # Python (or --model tamil, --model bengali)
 SHRUTI_MODEL=marathi ./examples/transcribe.sh clip.wav        # command line
 ```
 
