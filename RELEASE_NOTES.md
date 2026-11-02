@@ -1,6 +1,6 @@
 # Release notes
 
-## 1.2.0: Shruti Tamil joins the family (draft, date set at release)
+## 1.2.0: Shruti Tamil joins the family (4 November 2026)
 
 - **Shruti Tamil** (`shruti-tamil.cact`, 29.7 MB, [udgamlabs/shruti-tamil](https://huggingface.co/udgamlabs/shruti-tamil)):
   Tamil and English speech to text, English words in English. Results in `docs/tamil.md`.
