@@ -21,8 +21,14 @@ set -euo pipefail
 
 NEEDLE_REPO="Cactus-Compute/needle3"
 NEEDLE_REV="3391a1007e7db31d2fe5c69c734bbe93a9c1ce79"
-MODEL_URL="https://huggingface.co/udgamlabs/Shruti/resolve/main/shruti.cact"
-MODEL_SHA256="b189e954aaed4a9fd41acbad3ac05e486381e96325b22a4c695b9ea5153d7065" # Shruti 1.0, see SHA256SUMS
+# SHRUTI_MODEL=marathi ./transcribe.sh clip.wav picks Shruti Marathi; the default is Shruti Hindi (see SHA256SUMS).
+case "${SHRUTI_MODEL:-hindi}" in
+  hindi)   MODEL_URL="https://huggingface.co/udgamlabs/Shruti/resolve/main/shruti.cact"
+           MODEL_SHA256="b189e954aaed4a9fd41acbad3ac05e486381e96325b22a4c695b9ea5153d7065" ;;
+  marathi) MODEL_URL="https://huggingface.co/udgamlabs/shruti-marathi/resolve/main/shruti-marathi.cact"
+           MODEL_SHA256="f51a92944cc25515e703518cfef5ec9c52bf0db4cf91741530ebdded1df5bb05" ;;
+  *) echo "transcribe.sh: SHRUTI_MODEL must be hindi or marathi" >&2; exit 1 ;;
+esac
 CACHE="${SHRUTI_CACHE:-${XDG_CACHE_HOME:-$HOME/.cache}/shruti}"
 
 die() {
@@ -68,7 +74,7 @@ mkdir -p "$CACHE"
 needle="$CACHE/needle-$platform-${NEEDLE_REV:0:7}"
 fetch "https://huggingface.co/$NEEDLE_REPO/resolve/$NEEDLE_REV/$platform/needle" "$needle" "$needle_sha"
 chmod +x "$needle"
-model="$CACHE/shruti.cact"
+model="$CACHE/${MODEL_URL##*/}"
 fetch "$MODEL_URL" "$model" "$MODEL_SHA256"
 
 exec "$needle" --model "$model" --audio "$wav" "$@"

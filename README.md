@@ -16,6 +16,24 @@ checksums.
 
 *Shruti* (श्रुति) is Sanskrit for "that which is heard".
 
+## The Shruti family
+
+One small model per language, each with English, all in the same engine. This repository covers all of them; the
+sections below describe Shruti Hindi, and [docs/marathi.md](docs/marathi.md) has Shruti Marathi's results.
+
+| Model | File | Speech | Weights |
+|---|---|---|---|
+| **Shruti Hindi** | `shruti.cact`, 29.5 MB | Hindi, English, Hinglish | [udgamlabs/Shruti](https://huggingface.co/udgamlabs/Shruti) |
+| **Shruti Marathi** | `shruti-marathi.cact`, 29.7 MB | Marathi, English, and the two mixed | [udgamlabs/shruti-marathi](https://huggingface.co/udgamlabs/shruti-marathi) |
+
+```bash
+python examples/transcribe.py clip.wav --model marathi        # Python
+SHRUTI_MODEL=marathi ./examples/transcribe.sh clip.wav        # command line
+```
+
+In the browser example, set `MODEL_URL` to the Marathi file. Try both in your browser at
+[udgamlabs.com/models/shruti](https://udgamlabs.com/models/shruti).
+
 [Model card](https://huggingface.co/udgamlabs/Shruti) · [Try it in your browser](https://udgamlabs.com/models/shruti) · [Demo on Hugging Face](https://huggingface.co/spaces/udgamlabs/Shruti) · [Technical report](https://udgamlabs.com/research/shruti) · [udgamlabs.com](https://udgamlabs.com)
 
 | | |

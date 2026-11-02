@@ -1,5 +1,13 @@
 # Release notes
 
+## 1.1.0: Shruti Marathi joins the family (draft, date set at release)
+
+- **Shruti Marathi** (`shruti-marathi.cact`, 29.7 MB, [udgamlabs/shruti-marathi](https://huggingface.co/udgamlabs/shruti-marathi)):
+  Marathi and English speech to text, English words in English. Results in `docs/marathi.md`.
+- The Hindi model is now called **Shruti Hindi**. Nothing moved: its file, checksum and links are unchanged.
+- Examples: `transcribe.py --model marathi`, `SHRUTI_MODEL=marathi ./transcribe.sh`, and `?model=marathi` in the
+  browser example. `SHA256SUMS` lists the Marathi file.
+
 ## Documentation update (19 October 2026)
 
 The model files and examples are unchanged (still 1.0.0; checksums in `SHA256SUMS` unchanged).

@@ -69,12 +69,17 @@
 
 <script>
 'use strict'
-const MODEL_URL = 'https://huggingface.co/udgamlabs/Shruti/resolve/main/shruti.cact'
-const MODEL_SHA256 = 'b189e954aaed4a9fd41acbad3ac05e486381e96325b22a4c695b9ea5153d7065' // Shruti 1.0, see SHA256SUMS
-const MODEL_BYTES = 29546527
+// One model per language (see SHA256SUMS). Open the page with ?model=marathi for Shruti Marathi.
+const MODELS = {
+  hindi: ['https://huggingface.co/udgamlabs/Shruti/resolve/main/shruti.cact',
+    'b189e954aaed4a9fd41acbad3ac05e486381e96325b22a4c695b9ea5153d7065', 29546527],
+  marathi: ['https://huggingface.co/udgamlabs/shruti-marathi/resolve/main/shruti-marathi.cact',
+    'f51a92944cc25515e703518cfef5ec9c52bf0db4cf91741530ebdded1df5bb05', 29659445],
+}
+const [MODEL_URL, MODEL_SHA256, MODEL_BYTES] = MODELS[new URLSearchParams(location.search).get('model')] || MODELS.hindi
 const CACHE_NAME = 'shruti-example-v1' // the same name as in shruti-worker.js
 const SR = 16000 // the engine takes 16 kHz mono float samples in [-1, 1]
-const LANGUAGES = { hi: 'Hindi', en: 'English' }
+const LANGUAGES = { hi: 'Hindi', mr: 'Marathi', en: 'English' }
 
 const $ = (id) => document.getElementById(id)
 const ui = { load: $('load'), record: $('record'), file: $('file'), progress: $('progress'), status: $('status'),
