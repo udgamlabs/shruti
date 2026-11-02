@@ -27,7 +27,9 @@ case "${SHRUTI_MODEL:-hindi}" in
            MODEL_SHA256="b189e954aaed4a9fd41acbad3ac05e486381e96325b22a4c695b9ea5153d7065" ;;
   marathi) MODEL_URL="https://huggingface.co/udgamlabs/shruti-marathi/resolve/main/shruti-marathi.cact"
            MODEL_SHA256="f51a92944cc25515e703518cfef5ec9c52bf0db4cf91741530ebdded1df5bb05" ;;
-  *) echo "transcribe.sh: SHRUTI_MODEL must be hindi or marathi" >&2; exit 1 ;;
+  tamil)   MODEL_URL="https://huggingface.co/udgamlabs/shruti-tamil/resolve/main/shruti-tamil.cact"
+           MODEL_SHA256="8202f454350fb9ca2d2115ef5e81332c99de93b7c2f7c06fc9d2457995a4dec8" ;;
+  *) echo "transcribe.sh: SHRUTI_MODEL must be hindi, marathi or tamil" >&2; exit 1 ;;
 esac
 CACHE="${SHRUTI_CACHE:-${XDG_CACHE_HOME:-$HOME/.cache}/shruti}"
 

@@ -1,5 +1,12 @@
 # Release notes
 
+## 1.2.0: Shruti Tamil joins the family (draft, date set at release)
+
+- **Shruti Tamil** (`shruti-tamil.cact`, 29.7 MB, [udgamlabs/shruti-tamil](https://huggingface.co/udgamlabs/shruti-tamil)):
+  Tamil and English speech to text, English words in English. Results in `docs/tamil.md`.
+- Examples: `transcribe.py --model tamil`, `SHRUTI_MODEL=tamil ./transcribe.sh`, and `?model=tamil` in the browser
+  example. `SHA256SUMS` lists the Tamil file.
+
 ## 1.1.0: Shruti Marathi joins the family (2 November 2026)
 
 - **Shruti Marathi** (`shruti-marathi.cact`, 29.7 MB, [udgamlabs/shruti-marathi](https://huggingface.co/udgamlabs/shruti-marathi)):
