@@ -1,5 +1,12 @@
 # Release notes
 
+## 1.4.0: Shruti Telugu joins the family (4 November 2026)
+
+- **Shruti Telugu** (`shruti-telugu.cact`, 29.7 MB, [udgamlabs/shruti-telugu](https://huggingface.co/udgamlabs/shruti-telugu)):
+  Telugu and English speech to text, English words in English. Results in `docs/telugu.md`.
+- Examples: `transcribe.py --model telugu`, `SHRUTI_MODEL=telugu ./transcribe.sh`, and `?model=telugu` in the browser
+  example. `SHA256SUMS` lists the Telugu file.
+
 ## 1.3.0: Shruti Bengali joins the family (3 November 2026)
 
 - **Shruti Bengali** (`shruti-bengali.cact`, 29.7 MB, [udgamlabs/shruti-bengali](https://huggingface.co/udgamlabs/shruti-bengali)):
