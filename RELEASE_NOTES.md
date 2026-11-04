@@ -1,5 +1,12 @@
 # Release notes
 
+## 1.5.0: Shruti Gujarati joins the family (6 November 2026)
+
+- **Shruti Gujarati** (`shruti-gujarati.cact`, 29.7 MB, [udgamlabs/shruti-gujarati](https://huggingface.co/udgamlabs/shruti-gujarati)):
+  Gujarati and English speech to text, English words in English. Results in `docs/gujarati.md`.
+- Examples: `transcribe.py --model gujarati`, `SHRUTI_MODEL=gujarati ./transcribe.sh`, and `?model=gujarati` in the browser
+  example. `SHA256SUMS` lists the Gujarati file.
+
 ## 1.4.0: Shruti Telugu joins the family (4 November 2026)
 
 - **Shruti Telugu** (`shruti-telugu.cact`, 29.7 MB, [udgamlabs/shruti-telugu](https://huggingface.co/udgamlabs/shruti-telugu)):
