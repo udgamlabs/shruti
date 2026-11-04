@@ -1,6 +1,6 @@
 # Release notes
 
-## 1.5.0: Shruti Gujarati joins the family (6 November 2026)
+## 1.5.0: Shruti Gujarati joins the family (4 November 2026)
 
 - **Shruti Gujarati** (`shruti-gujarati.cact`, 29.7 MB, [udgamlabs/shruti-gujarati](https://huggingface.co/udgamlabs/shruti-gujarati)):
   Gujarati and English speech to text, English words in English. Results in `docs/gujarati.md`.
