@@ -1,5 +1,12 @@
 # Release notes
 
+## 1.7.0: Shruti Kannada joins the family (6 November 2026)
+
+- **Shruti Kannada** (`shruti-kannada.cact`, 29.7 MB, [udgamlabs/shruti-kannada](https://huggingface.co/udgamlabs/shruti-kannada)):
+  Kannada and English speech to text, English words in English. Results in `docs/kannada.md`.
+- Examples: `transcribe.py --model kannada`, `SHRUTI_MODEL=kannada ./transcribe.sh`, and `?model=kannada` in the browser
+  example. `SHA256SUMS` lists the Kannada file.
+
 ## 1.6.0: Shruti Odia joins the family (6 November 2026)
 
 - **Shruti Odia** (`shruti-odia.cact`, 29.7 MB, [udgamlabs/shruti-odia](https://huggingface.co/udgamlabs/shruti-odia)):
