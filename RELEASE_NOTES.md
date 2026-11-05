@@ -1,5 +1,12 @@
 # Release notes
 
+## 1.6.0: Shruti Odia joins the family (6 November 2026)
+
+- **Shruti Odia** (`shruti-odia.cact`, 29.7 MB, [udgamlabs/shruti-odia](https://huggingface.co/udgamlabs/shruti-odia)):
+  Odia and English speech to text, English words in English. Results in `docs/odia.md`.
+- Examples: `transcribe.py --model odia`, `SHRUTI_MODEL=odia ./transcribe.sh`, and `?model=odia` in the browser example.
+  `SHA256SUMS` lists the Odia file.
+
 ## 1.5.0: Shruti Gujarati joins the family (4 November 2026)
 
 - **Shruti Gujarati** (`shruti-gujarati.cact`, 29.7 MB, [udgamlabs/shruti-gujarati](https://huggingface.co/udgamlabs/shruti-gujarati)):

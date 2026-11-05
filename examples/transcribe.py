@@ -8,6 +8,7 @@
     python transcribe.py clip.wav --model bengali     # Shruti Bengali (Bengali and English)
     python transcribe.py clip.wav --model telugu      # Shruti Telugu (Telugu and English)
     python transcribe.py clip.wav --model gujarati    # Shruti Gujarati (Gujarati and English)
+    python transcribe.py clip.wav --model odia        # Shruti Odia (Odia and English)
     python transcribe.py english.wav --language en    # only for speech that is all English
 
 The first run downloads the model file (shruti.cact, 29.5 MB, from udgamlabs/Shruti; or shruti-marathi.cact, 29.7 MB,
@@ -42,6 +43,8 @@ MODELS = {
                "197166720f32163bc2102ebf9dc0374d51ec9928175649071da92d943cca0d9e", "te"),
     "gujarati": ("udgamlabs/shruti-gujarati", "shruti-gujarati.cact",
                  "23fd52c8edb36b24383c70b82d6dd21bfa7b070ca1606b15510e75bbf3822e1f", "gu"),
+    "odia": ("udgamlabs/shruti-odia", "shruti-odia.cact",
+             "e2818089abbd521b2224c01eec0d40e926673427d1abb0f78c27ebcfef71541d", "or"),
 }
 
 
@@ -59,11 +62,11 @@ def model_path(name: str) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Offline speech to text with a Shruti model (Hindi, Marathi, Tamil, Bengali, Telugu or Gujarati, each with English).")
+    parser = argparse.ArgumentParser(description="Offline speech to text with a Shruti model (Hindi, Marathi, Tamil, Bengali, Telugu, Gujarati or Odia, each with English).")
     parser.add_argument("wav", help="a WAV file")
     parser.add_argument("--model", choices=sorted(MODELS), default="hindi",
-                        help="hindi: Hindi, English and Hinglish (default); marathi: Marathi and English; tamil: Tamil and English; bengali: Bengali and English; telugu: Telugu and English; gujarati: Gujarati and English")
-    parser.add_argument("--language", choices=["hi", "mr", "ta", "bn", "te", "gu", "en"], default=None,
+                        help="hindi: Hindi, English and Hinglish (default); marathi: Marathi and English; tamil: Tamil and English; bengali: Bengali and English; telugu: Telugu and English; gujarati: Gujarati and English; odia: Odia and English")
+    parser.add_argument("--language", choices=["hi", "mr", "ta", "bn", "te", "gu", "or", "en"], default=None,
                         help="leave unset to detect it; 'en' helps only for speech that is entirely English")
     parser.add_argument("--keywords", default=None,
                         help="comma-separated names or terms to favour, e.g. 'Shruti, Udgam Labs'")
