@@ -93,18 +93,41 @@ const MODELS = {
     '5c8e3904c6fcbe984a26140835026ebb30f0df29596860ca5b9dabdc64513372', 29743065],
   assamese: ['https://huggingface.co/udgamlabs/shruti-assamese/resolve/main/shruti-assamese.cact',
     '86b41d774be36b6eadc4fb0ae906a8f444705b822f5c433e68e49ff3de56cd0e', 29742441],
+  sanskrit: ['https://huggingface.co/udgamlabs/shruti-sanskrit/resolve/main/shruti-sanskrit.cact',
+    'd6a0efbad1000edadad4334b1263bf860f8ef845c36ff2c81d83a9f8e8ad507c', 29659241],
+  punjabi: ['https://huggingface.co/udgamlabs/shruti-punjabi/resolve/main/shruti-punjabi.cact',
+    '30d8f09ceac37a0d009f480896e3daac123dde94d1e2e913a0983ecdcde7fa36', 29742303],
+  bodo: ['https://huggingface.co/udgamlabs/shruti-bodo/resolve/main/shruti-bodo.cact',
+    'fc38949cb343a7f914988f920286c6ee24d8166fafaad4ee4784af638b089580', 29659464],
+  dogri: ['https://huggingface.co/udgamlabs/shruti-dogri/resolve/main/shruti-dogri.cact',
+    '5f0fc33adfc8bd1e2b0c973feaa34bf43b1c6f552ff2d0be300353d7339591bd', 29659368],
+  kashmiri: ['https://huggingface.co/udgamlabs/shruti-kashmiri/resolve/main/shruti-kashmiri.cact',
+    '142cab90aba96992d3a0f5913ff72ba0e2097edb3aad613eeae247ff0cbc3504', 29740713],
+  konkani: ['https://huggingface.co/udgamlabs/shruti-konkani/resolve/main/shruti-konkani.cact',
+    'c6c4de2cbc4c7e45af03cca684f4ed2c98c83ac5d68fa6044923a38b4ce902ff', 29659164],
+  maithili: ['https://huggingface.co/udgamlabs/shruti-maithili/resolve/main/shruti-maithili.cact',
+    '7f87b9f2ce702956ad49bcec0f1da999bf4d38b3610b3d354ee9fac93f084842', 29658948],
+  manipuri: ['https://huggingface.co/udgamlabs/shruti-manipuri/resolve/main/shruti-manipuri.cact',
+    'e3152c6b3ff1214ec9492811e51cd6e43037efdfb3d935df6238aca897975e5d', 29742580],
+  nepali: ['https://huggingface.co/udgamlabs/shruti-nepali/resolve/main/shruti-nepali.cact',
+    'af3bf553a1448a468a376e491eedfaf5f53ee16ed9c6855173baa3d6c21aa7a0', 29659439],
+  santali: ['https://huggingface.co/udgamlabs/shruti-santali/resolve/main/shruti-santali.cact',
+    '1faad55924ed6c01c3cff970c919b8c82c3ecc3712da7a22ce51f6344a125699', 29743048],
+  sindhi: ['https://huggingface.co/udgamlabs/shruti-sindhi/resolve/main/shruti-sindhi.cact',
+    'd58f4646ca8fa87d62b0cea6ae53ba7c66fda6bd04ce18e2e37479ae72a79294', 29659247],
 }
 const MODEL_NAME = new URLSearchParams(location.search).get('model')
 const [MODEL_URL, MODEL_SHA256, MODEL_BYTES] = MODELS[MODEL_NAME] || MODELS.hindi
-const IS_URDU = MODEL_NAME === 'urdu' // Urdu runs right to left, and in a browser it does better with the language set (docs/urdu.md)
+const RTL_LANG = { urdu: 'ur', kashmiri: 'ks' }[MODEL_NAME] // these run right to left
+const SET_LANG = { urdu: 'ur', nepali: 'ne' }[MODEL_NAME] || null // these do better with the language set (docs/urdu.md, docs/nepali.md); null: detect it
 const CACHE_NAME = 'shruti-example-v1' // the same name as in shruti-worker.js
 const SR = 16000 // the engine takes 16 kHz mono float samples in [-1, 1]
-const LANGUAGES = { hi: 'Hindi', mr: 'Marathi', ta: 'Tamil', bn: 'Bengali', te: 'Telugu', gu: 'Gujarati', or: 'Odia', kn: 'Kannada', ur: 'Urdu', ml: 'Malayalam', as: 'Assamese', en: 'English' }
+const LANGUAGES = { hi: 'Hindi', mr: 'Marathi', ta: 'Tamil', bn: 'Bengali', te: 'Telugu', gu: 'Gujarati', or: 'Odia', kn: 'Kannada', ur: 'Urdu', ml: 'Malayalam', as: 'Assamese', sa: 'Sanskrit', pa: 'Punjabi', brx: 'Bodo', doi: 'Dogri', ks: 'Kashmiri', kok: 'Konkani', mai: 'Maithili', mni: 'Manipuri', ne: 'Nepali', sat: 'Santali', sd: 'Sindhi', en: 'English' }
 
 const $ = (id) => document.getElementById(id)
 const ui = { load: $('load'), record: $('record'), file: $('file'), progress: $('progress'), status: $('status'),
   output: $('output'), meta: $('meta'), error: $('error'), forget: $('forget') }
-if (IS_URDU) { ui.output.dir = 'rtl'; ui.output.lang = 'ur' }
+if (RTL_LANG) { ui.output.dir = 'rtl'; ui.output.lang = RTL_LANG }
 
 let worker = null
 let ready = false
@@ -168,7 +191,7 @@ function transcribe(pcm) {
   return new Promise((resolve, reject) => {
     const id = nextId++
     waiting.set(id, { resolve, reject })
-    worker.postMessage({ type: 'transcribe', id, pcm, language: IS_URDU ? 'ur' : null }, [pcm.buffer]) // null: detect the language
+    worker.postMessage({ type: 'transcribe', id, pcm, language: SET_LANG }, [pcm.buffer]) // null: detect the language
   })
 }
 

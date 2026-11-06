@@ -45,7 +45,29 @@ case "${SHRUTI_MODEL:-hindi}" in
            MODEL_SHA256="5c8e3904c6fcbe984a26140835026ebb30f0df29596860ca5b9dabdc64513372" ;;
   assamese) MODEL_URL="https://huggingface.co/udgamlabs/shruti-assamese/resolve/main/shruti-assamese.cact"
            MODEL_SHA256="86b41d774be36b6eadc4fb0ae906a8f444705b822f5c433e68e49ff3de56cd0e" ;;
-  *) echo "transcribe.sh: SHRUTI_MODEL must be hindi, marathi, tamil, bengali, telugu, gujarati, odia, kannada, urdu, malayalam or assamese" >&2; exit 1 ;;
+  sanskrit) MODEL_URL="https://huggingface.co/udgamlabs/shruti-sanskrit/resolve/main/shruti-sanskrit.cact"
+           MODEL_SHA256="d6a0efbad1000edadad4334b1263bf860f8ef845c36ff2c81d83a9f8e8ad507c" ;;
+  punjabi) MODEL_URL="https://huggingface.co/udgamlabs/shruti-punjabi/resolve/main/shruti-punjabi.cact"
+           MODEL_SHA256="30d8f09ceac37a0d009f480896e3daac123dde94d1e2e913a0983ecdcde7fa36" ;;
+  bodo) MODEL_URL="https://huggingface.co/udgamlabs/shruti-bodo/resolve/main/shruti-bodo.cact"
+           MODEL_SHA256="fc38949cb343a7f914988f920286c6ee24d8166fafaad4ee4784af638b089580" ;;
+  dogri) MODEL_URL="https://huggingface.co/udgamlabs/shruti-dogri/resolve/main/shruti-dogri.cact"
+           MODEL_SHA256="5f0fc33adfc8bd1e2b0c973feaa34bf43b1c6f552ff2d0be300353d7339591bd" ;;
+  kashmiri) MODEL_URL="https://huggingface.co/udgamlabs/shruti-kashmiri/resolve/main/shruti-kashmiri.cact"
+           MODEL_SHA256="142cab90aba96992d3a0f5913ff72ba0e2097edb3aad613eeae247ff0cbc3504" ;;
+  konkani) MODEL_URL="https://huggingface.co/udgamlabs/shruti-konkani/resolve/main/shruti-konkani.cact"
+           MODEL_SHA256="c6c4de2cbc4c7e45af03cca684f4ed2c98c83ac5d68fa6044923a38b4ce902ff" ;;
+  maithili) MODEL_URL="https://huggingface.co/udgamlabs/shruti-maithili/resolve/main/shruti-maithili.cact"
+           MODEL_SHA256="7f87b9f2ce702956ad49bcec0f1da999bf4d38b3610b3d354ee9fac93f084842" ;;
+  manipuri) MODEL_URL="https://huggingface.co/udgamlabs/shruti-manipuri/resolve/main/shruti-manipuri.cact"
+           MODEL_SHA256="e3152c6b3ff1214ec9492811e51cd6e43037efdfb3d935df6238aca897975e5d" ;;
+  nepali) MODEL_URL="https://huggingface.co/udgamlabs/shruti-nepali/resolve/main/shruti-nepali.cact"
+           MODEL_SHA256="af3bf553a1448a468a376e491eedfaf5f53ee16ed9c6855173baa3d6c21aa7a0" ;;
+  santali) MODEL_URL="https://huggingface.co/udgamlabs/shruti-santali/resolve/main/shruti-santali.cact"
+           MODEL_SHA256="1faad55924ed6c01c3cff970c919b8c82c3ecc3712da7a22ce51f6344a125699" ;;
+  sindhi) MODEL_URL="https://huggingface.co/udgamlabs/shruti-sindhi/resolve/main/shruti-sindhi.cact"
+           MODEL_SHA256="d58f4646ca8fa87d62b0cea6ae53ba7c66fda6bd04ce18e2e37479ae72a79294" ;;
+  *) echo "transcribe.sh: SHRUTI_MODEL must be a language in the README, in lowercase" >&2; exit 1 ;;
 esac
 CACHE="${SHRUTI_CACHE:-${XDG_CACHE_HOME:-$HOME/.cache}/shruti}"
 

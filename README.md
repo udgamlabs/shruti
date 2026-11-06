@@ -19,7 +19,8 @@ checksums.
 ## The Shruti family
 
 One small model per language, each with English, all in the same engine. This repository covers all of them; the
-sections below describe Shruti Hindi; [docs/marathi.md](docs/marathi.md), [docs/tamil.md](docs/tamil.md), [docs/bengali.md](docs/bengali.md), [docs/telugu.md](docs/telugu.md), [docs/gujarati.md](docs/gujarati.md), [docs/odia.md](docs/odia.md), [docs/kannada.md](docs/kannada.md), [docs/urdu.md](docs/urdu.md), [docs/malayalam.md](docs/malayalam.md) and [docs/assamese.md](docs/assamese.md) have Shruti Marathi's, Shruti Tamil's, Shruti Bengali's, Shruti Telugu's, Shruti Gujarati's, Shruti Odia's, Shruti Kannada's, Shruti Urdu's, Shruti Malayalam's and Shruti Assamese's results.
+sections below describe Shruti Hindi; each other language's results are in its own file under [docs/](docs/), for example
+[docs/marathi.md](docs/marathi.md).
 
 | Model | File | Speech | Weights |
 |---|---|---|---|
@@ -34,9 +35,20 @@ sections below describe Shruti Hindi; [docs/marathi.md](docs/marathi.md), [docs/
 | **Shruti Urdu** | `shruti-urdu.cact`, 29.7 MB | Urdu, English, and the two mixed | [udgamlabs/shruti-urdu](https://huggingface.co/udgamlabs/shruti-urdu) |
 | **Shruti Malayalam** | `shruti-malayalam.cact`, 29.7 MB | Malayalam, English, and the two mixed | [udgamlabs/shruti-malayalam](https://huggingface.co/udgamlabs/shruti-malayalam) |
 | **Shruti Assamese** | `shruti-assamese.cact`, 29.7 MB | Assamese, English, and the two mixed | [udgamlabs/shruti-assamese](https://huggingface.co/udgamlabs/shruti-assamese) |
+| **Shruti Sanskrit** | `shruti-sanskrit.cact`, 29.7 MB | Spoken Sanskrit, English, and the two mixed | [udgamlabs/shruti-sanskrit](https://huggingface.co/udgamlabs/shruti-sanskrit) |
+| **Shruti Punjabi** | `shruti-punjabi.cact`, 29.7 MB | Punjabi, English, and the two mixed | [udgamlabs/shruti-punjabi](https://huggingface.co/udgamlabs/shruti-punjabi) |
+| **Shruti Bodo** | `shruti-bodo.cact`, 29.7 MB | Bodo, English, and the two mixed | [udgamlabs/shruti-bodo](https://huggingface.co/udgamlabs/shruti-bodo) |
+| **Shruti Dogri** | `shruti-dogri.cact`, 29.7 MB | Dogri, English, and the two mixed | [udgamlabs/shruti-dogri](https://huggingface.co/udgamlabs/shruti-dogri) |
+| **Shruti Kashmiri** | `shruti-kashmiri.cact`, 29.7 MB | Kashmiri, English, and the two mixed | [udgamlabs/shruti-kashmiri](https://huggingface.co/udgamlabs/shruti-kashmiri) |
+| **Shruti Konkani** | `shruti-konkani.cact`, 29.7 MB | Konkani, English, and the two mixed | [udgamlabs/shruti-konkani](https://huggingface.co/udgamlabs/shruti-konkani) |
+| **Shruti Maithili** | `shruti-maithili.cact`, 29.7 MB | Maithili, English, and the two mixed | [udgamlabs/shruti-maithili](https://huggingface.co/udgamlabs/shruti-maithili) |
+| **Shruti Manipuri** | `shruti-manipuri.cact`, 29.7 MB | Manipuri, English, and the two mixed | [udgamlabs/shruti-manipuri](https://huggingface.co/udgamlabs/shruti-manipuri) |
+| **Shruti Nepali** | `shruti-nepali.cact`, 29.7 MB | Nepali, English, and the two mixed | [udgamlabs/shruti-nepali](https://huggingface.co/udgamlabs/shruti-nepali) |
+| **Shruti Santali** | `shruti-santali.cact`, 29.7 MB | Santali, English, and the two mixed | [udgamlabs/shruti-santali](https://huggingface.co/udgamlabs/shruti-santali) |
+| **Shruti Sindhi** | `shruti-sindhi.cact`, 29.7 MB | Sindhi, English, and the two mixed | [udgamlabs/shruti-sindhi](https://huggingface.co/udgamlabs/shruti-sindhi) |
 
 ```bash
-python examples/transcribe.py clip.wav --model marathi        # Python (or --model tamil, --model bengali, --model telugu, --model gujarati, --model odia, --model kannada, --model urdu, --model malayalam, --model assamese)
+python examples/transcribe.py clip.wav --model marathi        # Python; --model takes any language in the table, in lowercase
 SHRUTI_MODEL=marathi ./examples/transcribe.sh clip.wav        # command line
 ```
 

@@ -1,5 +1,11 @@
 # Release notes
 
+## 1.11.0: eleven more languages join the family (7 November 2026)
+
+- **Shruti Sanskrit, Punjabi, Bodo, Dogri, Kashmiri, Konkani, Maithili, Manipuri, Nepali, Santali and Sindhi**, one file each (`shruti-<language>.cact`, 29.7 MB, `udgamlabs/shruti-<language>`), each with English. Results and limits in `docs/<language>.md`.
+- Examples: `transcribe.py --model <language>`, `SHRUTI_MODEL=<language> ./transcribe.sh`, and `?model=<language>` in the browser example, which runs Kashmiri right to left and sets the language for Nepali.
+  `SHA256SUMS` lists the new files.
+
 ## 1.10.0: Shruti Assamese joins the family (6 November 2026)
 
 - **Shruti Assamese** (`shruti-assamese.cact`, 29.7 MB, [udgamlabs/shruti-assamese](https://huggingface.co/udgamlabs/shruti-assamese)):
