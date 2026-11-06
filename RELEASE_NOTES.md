@@ -1,6 +1,6 @@
 # Release notes
 
-## 1.8.0: Shruti Urdu joins the family (10 November 2026)
+## 1.8.0: Shruti Urdu joins the family (6 November 2026)
 
 - **Shruti Urdu** (`shruti-urdu.cact`, 29.7 MB, [udgamlabs/shruti-urdu](https://huggingface.co/udgamlabs/shruti-urdu)):
   Urdu and English speech to text, English words in English. Results in `docs/urdu.md`.
