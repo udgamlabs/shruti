@@ -1,5 +1,12 @@
 # Release notes
 
+## 1.9.0: Shruti Malayalam joins the family (November 2026)
+
+- **Shruti Malayalam** (`shruti-malayalam.cact`, 29.7 MB, [udgamlabs/shruti-malayalam](https://huggingface.co/udgamlabs/shruti-malayalam)):
+  Malayalam and English speech to text. Results and limits in `docs/malayalam.md`.
+- Examples: `transcribe.py --model malayalam`, `SHRUTI_MODEL=malayalam ./transcribe.sh`, and `?model=malayalam` in the browser example.
+  `SHA256SUMS` lists the Malayalam file.
+
 ## 1.8.0: Shruti Urdu joins the family (6 November 2026)
 
 - **Shruti Urdu** (`shruti-urdu.cact`, 29.7 MB, [udgamlabs/shruti-urdu](https://huggingface.co/udgamlabs/shruti-urdu)):

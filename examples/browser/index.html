@@ -89,13 +89,15 @@ const MODELS = {
     '492cdfdea934061edfefd14f2bd1e0255468adc8d0f0e3e9c2847cee69d5d5d8', 29742447],
   urdu: ['https://huggingface.co/udgamlabs/shruti-urdu/resolve/main/shruti-urdu.cact',
     'b5aaecd79cad932f24b1ab36ba61973d010bb8b14c1e8ee45ae9ad66955b4e8a', 29740557],
+  malayalam: ['https://huggingface.co/udgamlabs/shruti-malayalam/resolve/main/shruti-malayalam.cact',
+    '5c8e3904c6fcbe984a26140835026ebb30f0df29596860ca5b9dabdc64513372', 29743065],
 }
 const MODEL_NAME = new URLSearchParams(location.search).get('model')
 const [MODEL_URL, MODEL_SHA256, MODEL_BYTES] = MODELS[MODEL_NAME] || MODELS.hindi
 const IS_URDU = MODEL_NAME === 'urdu' // Urdu runs right to left, and in a browser it does better with the language set (docs/urdu.md)
 const CACHE_NAME = 'shruti-example-v1' // the same name as in shruti-worker.js
 const SR = 16000 // the engine takes 16 kHz mono float samples in [-1, 1]
-const LANGUAGES = { hi: 'Hindi', mr: 'Marathi', ta: 'Tamil', bn: 'Bengali', te: 'Telugu', gu: 'Gujarati', or: 'Odia', kn: 'Kannada', ur: 'Urdu', en: 'English' }
+const LANGUAGES = { hi: 'Hindi', mr: 'Marathi', ta: 'Tamil', bn: 'Bengali', te: 'Telugu', gu: 'Gujarati', or: 'Odia', kn: 'Kannada', ur: 'Urdu', ml: 'Malayalam', en: 'English' }
 
 const $ = (id) => document.getElementById(id)
 const ui = { load: $('load'), record: $('record'), file: $('file'), progress: $('progress'), status: $('status'),
