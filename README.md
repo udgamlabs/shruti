@@ -12,7 +12,7 @@ comes out in its own script and English words often stay in English, the way man
 All 22 are built on [Cactus Whistle](https://huggingface.co/Cactus-Compute/whistle) (Apache-2.0) and fine-tuned on public
 speech datasets. The weights are open, under Apache-2.0. This repository has runnable examples (Python, command line, a web
 page), each language's results and checksums. The [technical report](https://udgamlabs.com/research/shruti-family) has every
-language's numbers, and you can [try any of them in your browser](https://udgamlabs.com/models/shruti).
+language's numbers, the [Shruti collection](https://huggingface.co/collections/udgamlabs/shruti-6ad5f80d9d300685a6249c9b) has every model, and you can [try any of them in your browser](https://udgamlabs.com/models/shruti).
 
 ## The Shruti family
 
