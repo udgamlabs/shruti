@@ -6,7 +6,7 @@ and more than half of the English words stay in English letters. Built on Cactus
 Weights and model card: [huggingface.co/udgamlabs/shruti-assamese](https://huggingface.co/udgamlabs/shruti-assamese).
 
 **The result rests on English letters.** Against the native reference on the same conversations, and on read Assamese, both of those models
-are well ahead. We did not measure a per-language IndicConformer Assamese.
+are well ahead. A 198.8 MB community int8 conversion of the per-language IndicConformer Assamese scores 42.5 on those conversations against our 30.2, and is ahead on the native reference (35.3 vs 43.2) and on FLEURS (24.3 vs 35.1).
 
 ## Results
 
@@ -35,7 +35,7 @@ script.
 - **English words in English letters:** 57.3% of DiarBench's 375. IndicConformer-600M none, SraVaani-1.0 8.5%, Whisper base 48.5%, Whisper tiny 34.9%.
 - **English:** LibriSpeech test-clean 6.22 (Shruti Hindi: 5.95). **Silence:** 0 words invented on 100 silent clips.
 
-Other Assamese speech models exist that we have not measured, including per-language IndicConformer Assamese copies; these results cover only
+Other Assamese speech models exist that we have not measured, including the original per-language IndicConformer Assamese checkpoint; these results cover only
 the models listed here.
 
 **Speed and memory** (offline): Samsung Galaxy F62 (2021, 6 GB RAM), native engine, 10.7x faster than real time, 64 MB peak memory (20 clips).
