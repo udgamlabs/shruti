@@ -1,5 +1,12 @@
 # Release notes
 
+## Documentation update (7 November 2026)
+
+The model files and examples are unchanged (still 1.11.0; checksums in `SHA256SUMS` unchanged).
+
+- **The README now leads with the family of 22:** how to add a model to an app, every language code, and where the family falls short. The Hindi sections are labelled as Hindi.
+- **Technical report:** the family's report is linked, with a BibTeX entry: [udgamlabs.com/research/shruti-family](https://udgamlabs.com/research/shruti-family).
+
 ## 1.11.0: eleven more languages join the family (7 November 2026)
 
 - **Shruti Sanskrit, Punjabi, Bodo, Dogri, Kashmiri, Konkani, Maithili, Manipuri, Nepali, Santali and Sindhi**, one file each (`shruti-<language>.cact`, 29.7 MB, `udgamlabs/shruti-<language>`), each with English. Results and limits in `docs/<language>.md`.

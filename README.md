@@ -1,26 +1,23 @@
 ![Shruti · Udgam Labs](./assets/banner.png)
 
-**UDGAM LABS** · Speech-to-text model · 55M parameters
+**UDGAM LABS** · Speech-to-text models · 22 languages
 
 # Shruti
 
-**Shruti turns Hindi, English and Hinglish speech into text, offline, from one 29.5 MB file.** Hindi comes out in
-Devanagari and English words stay in English, the way people actually type Hinglish: *मेरा order कब आएगा*. It runs on a
-phone, a laptop or inside a web page, with no server and no internet connection. On a 2021 Samsung Galaxy F62 it
-transcribes a sentence in about a second using 80 MB of memory.
+**Shruti is a family of 22 small speech-to-text models, one per language, each with English.** Each is one file, 29.5 or
+29.7 MB, that runs offline on a phone, a laptop or inside a web page, with no key, no account and no server. The language
+comes out in its own script and English words often stay in English, the way many people type: *मेरा order कब आएगा*,
+*ಹೌದು correct ಈ time car ಬೇಡಪ್ಪಾ*.
 
-Shruti is built on [Cactus Whistle](https://huggingface.co/Cactus-Compute/whistle) (Apache-2.0): we retrained all 55M
-weights on 2,732 hours of openly licensed Indian speech and added 714 Devanagari vocabulary pieces. The weights are on
-Hugging Face; this repository has runnable examples (Python, command line, a web page), the full comparison and
-checksums.
-
-*Shruti* (श्रुति) is Sanskrit for "that which is heard".
+All 22 are built on [Cactus Whistle](https://huggingface.co/Cactus-Compute/whistle) (Apache-2.0) and fine-tuned on public
+speech datasets. The weights are open, under Apache-2.0. This repository has runnable examples (Python, command line, a web
+page), each language's results and checksums. The [technical report](https://udgamlabs.com/research/shruti-family) has every
+language's numbers, and you can [try any of them in your browser](https://udgamlabs.com/models/shruti).
 
 ## The Shruti family
 
-One small model per language, each with English, all in the same engine. This repository covers all of them; the
-sections below describe Shruti Hindi; each other language's results are in its own file under [docs/](docs/), for example
-[docs/marathi.md](docs/marathi.md).
+One small model per language, each with English, all in the same engine. Each language's results are in its own file under
+[docs/](docs/), for example [docs/marathi.md](docs/marathi.md).
 
 | Model | File | Speech | Weights |
 |---|---|---|---|
@@ -47,13 +44,65 @@ sections below describe Shruti Hindi; each other language's results are in its o
 | **Shruti Santali** | `shruti-santali.cact`, 29.7 MB | Santali, English, and the two mixed | [udgamlabs/shruti-santali](https://huggingface.co/udgamlabs/shruti-santali) |
 | **Shruti Sindhi** | `shruti-sindhi.cact`, 29.7 MB | Sindhi, English, and the two mixed | [udgamlabs/shruti-sindhi](https://huggingface.co/udgamlabs/shruti-sindhi) |
 
+## Add Shruti to your app
+
 ```bash
-python examples/transcribe.py clip.wav --model marathi        # Python; --model takes any language in the table, in lowercase
-SHRUTI_MODEL=marathi ./examples/transcribe.sh clip.wav        # command line
+pip install cactus-needle
+hf download udgamlabs/shruti-tamil shruti-tamil.cact --local-dir .
 ```
 
-In the browser example, set `MODEL_URL` to the Marathi file. Try both in your browser at
-[udgamlabs.com/models/shruti](https://udgamlabs.com/models/shruti).
+```python
+from needle import Whistle
+
+model = Whistle("shruti-tamil.cact")
+print(model.transcribe("clip.wav")["text"])            # the language is chosen automatically
+print(model.transcribe("english.wav", language="en"))  # only for speech that is entirely English
+```
+
+| You are building | Use |
+|---|---|
+| A Python app or a server | `cactus-needle`, as above, or `python examples/transcribe.py clip.wav --model tamil` |
+| A command-line tool | `SHRUTI_MODEL=tamil ./examples/transcribe.sh clip.wav`, which needs no Python; add `--audio-stream` for live, word-by-word text |
+| A web page | [`examples/browser/`](examples/browser/), one page with no build step; add `?model=tamil` |
+| An Android or iOS app | Link the engine's C library (`needle.h`: `needle_load`, `needle_transcribe`, `needle_stream_transcribe_process`) and ship the `.cact` file with the app. Use 2 threads on phones with two fast cores |
+
+Three things to know:
+
+- **First use needs the network.** The model file downloads once unless you ship it with your app, and the Python package
+  downloads Cactus's engine library on first use. After that it works offline.
+- **Usage counts.** The `cactus-needle` Python package sends anonymous usage counts by default; set `NEEDLE_TELEMETRY=0` to
+  turn that off. The command-line engine and the WebAssembly build make no network calls.
+- **Setting the language.** Leave it on automatic for most uses. Set `en` for speech that is entirely English, and `ne` when
+  you know it's Nepali. The codes: Hindi `hi`, Marathi `mr`, Tamil `ta`, Bengali `bn`, Telugu `te`, Gujarati `gu`, Odia `or`,
+  Kannada `kn`, Urdu `ur`, Malayalam `ml`, Assamese `as`, Sanskrit `sa`, Punjabi `pa`, Bodo `brx`, Dogri `doi`, Kashmiri `ks`,
+  Konkani `kok`, Maithili `mai`, Manipuri `mni`, Nepali `ne`, Santali `sat`, Sindhi `sd`.
+
+## How good is it, across the family?
+
+It depends on the language, so there is no one number. On DiarBench conversations, held out from training, 11 models make
+fewer errors than IndicConformer for that language when English words count only in English letters. The
+[technical report](https://udgamlabs.com/research/shruti-family) gives each language's result, test and intervals.
+
+**Where the family falls short:**
+
+- **Read speech.** On most languages, larger models are clearly more accurate on read speech.
+- **The native reference.** When English words are expected in the language's own script, IndicConformer or SraVaani-1.0 is
+  ahead on most languages. Our leads depend on writing English in English letters.
+- **High error rates.** On real conversation a quarter to over half of the words are wrong, depending on the language.
+- **Thin tests.** Eleven languages have conversation tests under 100 turns. For eight, we measured one serious rival.
+- **One script each.** Sindhi and Konkani are Devanagari only, Manipuri is Meetei Mayek only, Santali is Ol Chiki only, and
+  Kashmiri is Perso-Arabic only.
+- **Not tested.** Noise, music, a live microphone on most languages, and Linux, Windows and iOS for the 21 newer models.
+  Speakers haven't read the transcripts of the 16 newer languages. There's no punctuation, and numbers come out as words.
+
+---
+
+## Shruti Hindi
+
+**Everything from here on is about Shruti Hindi**, the model the family grew from. It turns Hindi, English and Hinglish speech
+into text from one 29.5 MB file. On a 2021 Samsung Galaxy F62 it transcribes a sentence in about a second using 80 MB of
+memory. We retrained all 55M weights of Cactus Whistle on 2,732 hours of openly licensed Indian speech and added 714
+Devanagari vocabulary pieces.
 
 [Model card](https://huggingface.co/udgamlabs/Shruti) · [Try it in your browser](https://udgamlabs.com/models/shruti) · [Demo on Hugging Face](https://huggingface.co/spaces/udgamlabs/Shruti) · [Technical report](https://udgamlabs.com/research/shruti) · [udgamlabs.com](https://udgamlabs.com)
 
@@ -266,6 +315,15 @@ needle engine (Apache-2.0), with its licence and notice in
 ## Citation
 
 ```bibtex
+@techreport{udgamlabs2026shrutifamily,
+  title       = {Shruti: 22 small offline speech-to-text models, one per language},
+  author      = {{Udgam Labs}},
+  institution = {Udgam Labs},
+  type        = {Technical report},
+  year        = {2026},
+  url         = {https://udgamlabs.com/research/shruti-family}
+}
+
 @techreport{udgamlabs2026shrutireport,
   title       = {Shruti: offline speech-to-text for Hindi, English and Hinglish in 29.5 MB},
   author      = {{Udgam Labs}},
