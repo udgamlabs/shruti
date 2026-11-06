@@ -25,7 +25,7 @@ on-device engine on a Mac. Measured 2 November 2026. Size is the file as publish
 | [Whisper-small Kannada](https://huggingface.co/vasista22/whisper-kannada-small) (vasista22) | 967.1 MB | 88.7 | 20.8 | 26.5 |
 
 DiarBench is real conversation that mixes in English; its references here write English words in English (Latin script),
-as Shruti Kannada does. With the English words dropped from the reference, SraVaani-1.0 (46.4) and IndicConformer Kannada
+as Shruti Kannada does. With English words written in Kannada script in the reference, SraVaani-1.0 (46.4) and IndicConformer Kannada
 (56.7) are ahead (Shruti Kannada 69.5). FLEURS and Kathbath are read Kannada.
 
 - **Mixed Kannada and English:** on DiarBench, Shruti Kannada makes fewer errors than IndicConformer Kannada, almost 5x its
