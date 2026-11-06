@@ -21,7 +21,7 @@ on-device engine on a Mac. Measured 2 November 2026. Size is the file as publish
 | SraVaani-1.0 | 908.8 MB | 34.6 | **15.7** | 11.3 |
 
 DiarBench is real conversation that mixes in English; its references here write English words in English (Latin
-script), as Shruti Bengali does. With the English words dropped from the reference, Vosk Bengali (38.5) and IndicConformer
+script), as Shruti Bengali does. With English words written in Bengali script in the reference, Vosk Bengali (38.5) and IndicConformer
 Bengali (34.8) are ahead of Shruti Bengali (41.8). FLEURS and Kathbath are read Bengali.
 
 - **Mixed Bengali and English:** on DiarBench, Shruti Bengali makes fewer errors than Vosk Bengali (about 3x its size) and

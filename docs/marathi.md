@@ -22,7 +22,7 @@ normaliser and scorer; Shruti Marathi in its on-device engine on a Mac, the othe
 
 DiarBench, IndicVoices, SPRING-INX and Vaani are conversations that mix in English. Their references here write English
 words in English (Latin script), as Shruti Marathi does; models that write English in Devanagari are penalised for it.
-With the English words dropped from the references (the "native" view), IndicConformer Marathi is ahead: DiarBench
+With English words written in Devanagari in the references (the "native" view), IndicConformer Marathi is ahead: DiarBench
 32.3 vs 40.9, IndicVoices 21.3 vs 26.6, Vaani 37.6 vs 41.7. FLEURS and Kathbath have one Devanagari reference.
 
 - **Size class:** every other open model under 100 MB we measured gets more Marathi words wrong than right (Whisper tiny

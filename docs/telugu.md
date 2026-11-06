@@ -23,7 +23,7 @@ on-device engine on a Mac. Measured 2 November 2026. Size is the file as publish
 | [Whisper-small Telugu](https://huggingface.co/vasista22/whisper-telugu-small) (vasista22) | 967.1 MB | 55.7 | 24.0 | 26.0 |
 
 DiarBench is real conversation that mixes in English; its references here write English words in English (Latin
-script), as Shruti Telugu does. With the English words dropped from the reference, most larger models are ahead
+script), as Shruti Telugu does. With English words written in Telugu script in the reference, most larger models are ahead
 (SraVaani-1.0 33.0, IndicConformer Telugu 37.3, Shruti Telugu 58.0). FLEURS and Kathbath are read Telugu.
 
 - **Mixed Telugu and English:** on DiarBench, Shruti Telugu makes fewer errors than IndicConformer Telugu (almost 5x its

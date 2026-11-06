@@ -21,7 +21,7 @@ on-device engine on a Mac. Measured 2 November 2026. Size is the file as publish
 | [deepdml whisper-base-ta](https://huggingface.co/deepdml/whisper-base-ta-mix-norm) (fp32) | 290.4 MB | 38.7 | 39.1 | 81.1 |
 
 DiarBench is real conversation that mixes in English; its references here write English words in English (Latin
-script), as Shruti Tamil does. With the English words dropped from the reference, IndicConformer Tamil is ahead (51.4 vs
+script), as Shruti Tamil does. With English words written in Tamil script in the reference, IndicConformer Tamil is ahead (51.4 vs
 62.2), and so is the much larger SraVaani-1.0 (908.8 MB; 44.0). FLEURS and Kathbath are read Tamil.
 
 - **Size class:** every other open model under 100 MB we measured gets more Tamil words wrong than right (Whisper adds

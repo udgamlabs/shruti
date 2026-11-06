@@ -18,7 +18,7 @@ Mac. FLEURS and Kathbath have 200 clips each, DiarBench 196 turns. Measured 2 No
 | SraVaani-1.0 | 908.8 MB | 43.4 | **22.1** | 21.4 |
 
 DiarBench is real conversation that mixes in English; its references here write English words in English (Latin script),
-as Shruti Odia does. With the English words dropped from the reference, SraVaani-1.0 (34.9) and IndicConformer Odia (40.7)
+as Shruti Odia does. With English words written in Odia script in the reference, SraVaani-1.0 (34.9) and IndicConformer Odia (40.7)
 are ahead (Shruti Odia 49.2). FLEURS and Kathbath are read Odia. Whisper's language list has no Odia.
 
 - **Mixed Odia and English:** on DiarBench, Shruti Odia makes fewer errors than every model we measured, including

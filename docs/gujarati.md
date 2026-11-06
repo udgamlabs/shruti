@@ -24,7 +24,7 @@ on-device engine on a Mac. Measured 2 November 2026. Size is the file as publish
 | [Whisper-small Gujarati](https://huggingface.co/vasista22/whisper-gujarati-small) (vasista22) | 967.1 MB | 65.4 | 26.8 | 35.1 |
 
 DiarBench is real conversation that mixes in English; its references here write English words in English (Latin
-script), as Shruti Gujarati does. With the English words dropped from the reference, SraVaani-1.0 is ahead (22.8; Shruti
+script), as Shruti Gujarati does. With English words written in Gujarati script in the reference, SraVaani-1.0 is ahead (22.8; Shruti
 Gujarati 33.6, IndicConformer Gujarati 40.2). FLEURS and Kathbath are read Gujarati.
 
 - **Mixed Gujarati and English:** on DiarBench, Shruti Gujarati makes fewer errors than every model we measured, including
