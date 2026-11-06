@@ -1,6 +1,6 @@
 # Release notes
 
-## 1.9.0: Shruti Malayalam joins the family (November 2026)
+## 1.9.0: Shruti Malayalam joins the family (6 November 2026)
 
 - **Shruti Malayalam** (`shruti-malayalam.cact`, 29.7 MB, [udgamlabs/shruti-malayalam](https://huggingface.co/udgamlabs/shruti-malayalam)):
   Malayalam and English speech to text. Results and limits in `docs/malayalam.md`.
