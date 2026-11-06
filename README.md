@@ -46,7 +46,23 @@ One small model per language, each with English, all in the same engine. Each la
 
 ## Add Shruti to your app
 
+Each Shruti model is one file of about 30 MB that runs on your user's own device in the Cactus needle engine. There are no accounts or API keys. Pick what you are building.
+
+| You are building | Start here | Tested on |
+|---|---|---|
+| A Python app or a server | [Python](#python) | Mac |
+| A script or a terminal tool | [Command line](#command-line) | Mac |
+| A web page | [Browser](#browser): one page, no build step | Mac, Chromium-based browser |
+| An Android app | [Android](#android) | Galaxy F62: the engine and its text; **an app built on it has not been run** |
+| A C or C++ program | [C](#c-and-c) | Mac; Galaxy F62 with the Linux arm64 library |
+| An iOS app | [iOS](#ios) | **Not run** |
+
+Every language follows the pattern below, with its own name in place of `tamil`. Hindi is the one exception: `udgamlabs/Shruti`, `shruti.cact`.
+
+### Python
+
 ```bash
+python3 -m venv .venv && . .venv/bin/activate
 pip install cactus-needle
 hf download udgamlabs/shruti-tamil shruti-tamil.cact --local-dir .
 ```
@@ -55,18 +71,71 @@ hf download udgamlabs/shruti-tamil shruti-tamil.cact --local-dir .
 from needle import Whistle
 
 model = Whistle("shruti-tamil.cact")
-print(model.transcribe("clip.wav")["text"])            # the language is chosen automatically
-print(model.transcribe("english.wav", language="en"))  # only for speech that is entirely English
+print(model.transcribe("clip.wav")["text"])                    # the language is chosen automatically
+print(model.transcribe("english.wav", language="en")["text"])  # only for speech that is entirely English
 ```
 
-| You are building | Use |
-|---|---|
-| A Python app or a server | `cactus-needle`, as above, or `python examples/transcribe.py clip.wav --model tamil` |
-| A command-line tool | `SHRUTI_MODEL=tamil ./examples/transcribe.sh clip.wav`, which needs no Python; add `--audio-stream` for live, word-by-word text |
-| A web page | [`examples/browser/`](examples/browser/), one page with no build step; add `?model=tamil` |
-| An Android or iOS app | Link the engine's C library (`needle.h`: `needle_load`, `needle_transcribe`, `needle_stream_transcribe_process`) and ship the `.cact` file with the app. Use 2 threads on phones with two fast cores |
+### Command line
 
-Three things to know:
+```bash
+git clone --depth 1 https://github.com/udgamlabs/shruti && cd shruti
+SHRUTI_MODEL=tamil ./examples/transcribe.sh clip.wav
+SHRUTI_MODEL=tamil ./examples/transcribe.sh clip.wav --audio-stream   # live, word by word
+```
+
+No Python needed. It downloads the engine and the model once and checks both against their SHA-256.
+
+### Browser
+
+```bash
+git clone --depth 1 https://github.com/udgamlabs/shruti && cd shruti/examples/browser
+python3 -m http.server 8000
+```
+
+Open `http://localhost:8000/?model=tamil`, press Load, and choose an audio file. The page runs the engine's WebAssembly build in a Web Worker and keeps the
+model in the browser's Cache Storage. Copy the folder into your own site: it has no dependencies.
+
+### Android
+
+The engine ships ready-made Android files in [Cactus-Compute/needle3](https://huggingface.co/Cactus-Compute/needle3/tree/3391a1007e7db31d2fe5c69c734bbe93a9c1ce79/android-arm64).
+See it work on your phone first, over USB:
+
+```bash
+curl -fLO https://huggingface.co/Cactus-Compute/needle3/resolve/3391a1007e7db31d2fe5c69c734bbe93a9c1ce79/android-arm64/needle
+curl -fLO https://huggingface.co/udgamlabs/shruti-tamil/resolve/main/shruti-tamil.cact
+adb push needle shruti-tamil.cact clip.wav /data/local/tmp/
+adb shell chmod +x /data/local/tmp/needle
+adb shell "cd /data/local/tmp && ./needle --model shruti-tamil.cact --audio clip.wav --threads 2"
+```
+
+On a five-year-old phone with 6 GB of RAM, a 10-second Hindi clip takes about 1.5 s including loading, in 63 MB. Use 2 threads on phones with two fast cores.
+
+**In your app:** link `android-arm64/libneedle.a` from the same folder through the Android NDK, call the functions in [C](#c-and-c) from JNI, and ship the `.cact`
+file with the app. The library needs the NDK's C++ runtime. We have not yet built and run an app this way.
+
+### C and C++
+
+[`examples/c/transcribe.c`](examples/c/transcribe.c) is one short file. On a Mac with Apple silicon:
+
+```bash
+git clone --depth 1 https://github.com/udgamlabs/shruti && cd shruti
+curl -fLO https://huggingface.co/Cactus-Compute/needle3/resolve/3391a1007e7db31d2fe5c69c734bbe93a9c1ce79/macos-arm64/libneedle.a
+curl -fLO https://huggingface.co/Cactus-Compute/needle3/resolve/3391a1007e7db31d2fe5c69c734bbe93a9c1ce79/macos-arm64/needle.h
+curl -fLO https://huggingface.co/udgamlabs/shruti-tamil/resolve/main/shruti-tamil.cact
+clang -O2 -I. examples/c/transcribe.c libneedle.a -lc++ -o transcribe
+./transcribe shruti-tamil.cact clip.wav          # the whole clip
+./transcribe shruti-tamil.cact clip.wav --live   # one second at a time, words as they are committed
+```
+
+This sample takes a 16-bit, 16 kHz, mono WAV file. The calls that matter are `needle_load`, `needle_transcribe` and `needle_stream_transcribe_process`. Other platforms have their
+own folder in the same repo.
+
+### iOS
+
+**Not run.** The engine ships `ios-arm64/libneedle.a` and `ios-sim-arm64/libneedle.a`, and the C calls above are the same. Link the library in Xcode and ship the `.cact` file with
+the app.
+
+**Things to know:**
 
 - **First use needs the network.** The model file downloads once unless you ship it with your app, and the Python package
   downloads Cactus's engine library on first use. After that it works offline.
@@ -76,6 +145,8 @@ Three things to know:
   you know it's Nepali. The codes: Hindi `hi`, Marathi `mr`, Tamil `ta`, Bengali `bn`, Telugu `te`, Gujarati `gu`, Odia `or`,
   Kannada `kn`, Urdu `ur`, Malayalam `ml`, Assamese `as`, Sanskrit `sa`, Punjabi `pa`, Bodo `brx`, Dogri `doi`, Kashmiri `ks`,
   Konkani `kok`, Maithili `mai`, Manipuri `mni`, Nepali `ne`, Santali `sat`, Sindhi `sd`.
+- **Long audio:** the engine handles it, working through it in 30-second windows.
+- **Small differences:** the same model file can write a slightly different word on a different chip. Test on the devices you ship for.
 
 ## How good is it, across the family?
 
