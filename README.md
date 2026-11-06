@@ -19,7 +19,7 @@ checksums.
 ## The Shruti family
 
 One small model per language, each with English, all in the same engine. This repository covers all of them; the
-sections below describe Shruti Hindi; [docs/marathi.md](docs/marathi.md), [docs/tamil.md](docs/tamil.md), [docs/bengali.md](docs/bengali.md), [docs/telugu.md](docs/telugu.md), [docs/gujarati.md](docs/gujarati.md), [docs/odia.md](docs/odia.md) and [docs/kannada.md](docs/kannada.md) have Shruti Marathi's, Shruti Tamil's, Shruti Bengali's, Shruti Telugu's, Shruti Gujarati's, Shruti Odia's and Shruti Kannada's results.
+sections below describe Shruti Hindi; [docs/marathi.md](docs/marathi.md), [docs/tamil.md](docs/tamil.md), [docs/bengali.md](docs/bengali.md), [docs/telugu.md](docs/telugu.md), [docs/gujarati.md](docs/gujarati.md), [docs/odia.md](docs/odia.md), [docs/kannada.md](docs/kannada.md) and [docs/urdu.md](docs/urdu.md) have Shruti Marathi's, Shruti Tamil's, Shruti Bengali's, Shruti Telugu's, Shruti Gujarati's, Shruti Odia's, Shruti Kannada's and Shruti Urdu's results.
 
 | Model | File | Speech | Weights |
 |---|---|---|---|
@@ -31,9 +31,10 @@ sections below describe Shruti Hindi; [docs/marathi.md](docs/marathi.md), [docs/
 | **Shruti Gujarati** | `shruti-gujarati.cact`, 29.7 MB | Gujarati, English, and the two mixed | [udgamlabs/shruti-gujarati](https://huggingface.co/udgamlabs/shruti-gujarati) |
 | **Shruti Odia** | `shruti-odia.cact`, 29.7 MB | Odia, English, and the two mixed | [udgamlabs/shruti-odia](https://huggingface.co/udgamlabs/shruti-odia) |
 | **Shruti Kannada** | `shruti-kannada.cact`, 29.7 MB | Kannada, English, and the two mixed | [udgamlabs/shruti-kannada](https://huggingface.co/udgamlabs/shruti-kannada) |
+| **Shruti Urdu** | `shruti-urdu.cact`, 29.7 MB | Urdu, English, and the two mixed | [udgamlabs/shruti-urdu](https://huggingface.co/udgamlabs/shruti-urdu) |
 
 ```bash
-python examples/transcribe.py clip.wav --model marathi        # Python (or --model tamil, --model bengali, --model telugu, --model gujarati, --model odia, --model kannada)
+python examples/transcribe.py clip.wav --model marathi        # Python (or --model tamil, --model bengali, --model telugu, --model gujarati, --model odia, --model kannada, --model urdu)
 SHRUTI_MODEL=marathi ./examples/transcribe.sh clip.wav        # command line
 ```
 

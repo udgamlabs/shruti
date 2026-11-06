@@ -1,5 +1,12 @@
 # Release notes
 
+## 1.8.0: Shruti Urdu joins the family (10 November 2026)
+
+- **Shruti Urdu** (`shruti-urdu.cact`, 29.7 MB, [udgamlabs/shruti-urdu](https://huggingface.co/udgamlabs/shruti-urdu)):
+  Urdu and English speech to text, English words in English. Results in `docs/urdu.md`.
+- Examples: `transcribe.py --model urdu`, `SHRUTI_MODEL=urdu ./transcribe.sh`, and `?model=urdu` in the browser example, which
+  shows Urdu right to left. `SHA256SUMS` lists the Urdu file.
+
 ## 1.7.0: Shruti Kannada joins the family (6 November 2026)
 
 - **Shruti Kannada** (`shruti-kannada.cact`, 29.7 MB, [udgamlabs/shruti-kannada](https://huggingface.co/udgamlabs/shruti-kannada)):
