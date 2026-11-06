@@ -19,7 +19,7 @@ checksums.
 ## The Shruti family
 
 One small model per language, each with English, all in the same engine. This repository covers all of them; the
-sections below describe Shruti Hindi; [docs/marathi.md](docs/marathi.md), [docs/tamil.md](docs/tamil.md), [docs/bengali.md](docs/bengali.md), [docs/telugu.md](docs/telugu.md), [docs/gujarati.md](docs/gujarati.md), [docs/odia.md](docs/odia.md), [docs/kannada.md](docs/kannada.md), [docs/urdu.md](docs/urdu.md) and [docs/malayalam.md](docs/malayalam.md) have Shruti Marathi's, Shruti Tamil's, Shruti Bengali's, Shruti Telugu's, Shruti Gujarati's, Shruti Odia's, Shruti Kannada's, Shruti Urdu's and Shruti Malayalam's results.
+sections below describe Shruti Hindi; [docs/marathi.md](docs/marathi.md), [docs/tamil.md](docs/tamil.md), [docs/bengali.md](docs/bengali.md), [docs/telugu.md](docs/telugu.md), [docs/gujarati.md](docs/gujarati.md), [docs/odia.md](docs/odia.md), [docs/kannada.md](docs/kannada.md), [docs/urdu.md](docs/urdu.md), [docs/malayalam.md](docs/malayalam.md) and [docs/assamese.md](docs/assamese.md) have Shruti Marathi's, Shruti Tamil's, Shruti Bengali's, Shruti Telugu's, Shruti Gujarati's, Shruti Odia's, Shruti Kannada's, Shruti Urdu's, Shruti Malayalam's and Shruti Assamese's results.
 
 | Model | File | Speech | Weights |
 |---|---|---|---|
@@ -33,9 +33,10 @@ sections below describe Shruti Hindi; [docs/marathi.md](docs/marathi.md), [docs/
 | **Shruti Kannada** | `shruti-kannada.cact`, 29.7 MB | Kannada, English, and the two mixed | [udgamlabs/shruti-kannada](https://huggingface.co/udgamlabs/shruti-kannada) |
 | **Shruti Urdu** | `shruti-urdu.cact`, 29.7 MB | Urdu, English, and the two mixed | [udgamlabs/shruti-urdu](https://huggingface.co/udgamlabs/shruti-urdu) |
 | **Shruti Malayalam** | `shruti-malayalam.cact`, 29.7 MB | Malayalam, English, and the two mixed | [udgamlabs/shruti-malayalam](https://huggingface.co/udgamlabs/shruti-malayalam) |
+| **Shruti Assamese** | `shruti-assamese.cact`, 29.7 MB | Assamese, English, and the two mixed | [udgamlabs/shruti-assamese](https://huggingface.co/udgamlabs/shruti-assamese) |
 
 ```bash
-python examples/transcribe.py clip.wav --model marathi        # Python (or --model tamil, --model bengali, --model telugu, --model gujarati, --model odia, --model kannada, --model urdu, --model malayalam)
+python examples/transcribe.py clip.wav --model marathi        # Python (or --model tamil, --model bengali, --model telugu, --model gujarati, --model odia, --model kannada, --model urdu, --model malayalam, --model assamese)
 SHRUTI_MODEL=marathi ./examples/transcribe.sh clip.wav        # command line
 ```
 

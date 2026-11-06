@@ -1,5 +1,12 @@
 # Release notes
 
+## 1.10.0: Shruti Assamese joins the family (6 November 2026)
+
+- **Shruti Assamese** (`shruti-assamese.cact`, 29.7 MB, [udgamlabs/shruti-assamese](https://huggingface.co/udgamlabs/shruti-assamese)):
+  Assamese and English speech to text. Results and limits in `docs/assamese.md`.
+- Examples: `transcribe.py --model assamese`, `SHRUTI_MODEL=assamese ./transcribe.sh`, and `?model=assamese` in the browser example.
+  `SHA256SUMS` lists the Assamese file.
+
 ## 1.9.0: Shruti Malayalam joins the family (6 November 2026)
 
 - **Shruti Malayalam** (`shruti-malayalam.cact`, 29.7 MB, [udgamlabs/shruti-malayalam](https://huggingface.co/udgamlabs/shruti-malayalam)):
