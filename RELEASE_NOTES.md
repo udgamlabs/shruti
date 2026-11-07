@@ -4,6 +4,7 @@
 
 The model files and examples are unchanged (still 1.11.0; checksums in `SHA256SUMS` unchanged).
 
+- **ONNX builds for all 22 languages:** `pip install shruti-onnx`, `npm i shruti-onnx`, and sherpa-onnx packs. Code, docs and samples are in `onnx/`, weights in [udgamlabs/Shruti-ONNX](https://huggingface.co/udgamlabs/Shruti-ONNX). None of the 22 passed every test against the engine; 13 matched with a named miss and 9 failed. The README and `onnx/docs/languages.md` say which and how.
 - **The README now leads with the family of 22:** how to add a model to an app, every language code, and where the family falls short. The Hindi sections are labelled as Hindi.
 - **Technical report:** the family's report is linked, with a BibTeX entry: [udgamlabs.com/research/shruti-family](https://udgamlabs.com/research/shruti-family).
 

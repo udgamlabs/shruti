@@ -46,23 +46,38 @@ One small model per language, each with English, all in the same engine. Each la
 
 ## Add Shruti to your app
 
-Each Shruti model is one file of about 30 MB that runs on your user's own device in the Cactus needle engine. There are no accounts or API keys. Pick what you are building.
+Shruti runs on your user's own device, with no accounts or API keys, and after the first download it works offline. Every one of the 22 languages comes in two forms: a file of about 30 MB for
+the Cactus needle engine, and ONNX builds for ONNX Runtime, the browser and sherpa-onnx.
 
-| You are building | Start here | Tested on |
-|---|---|---|
-| A Python app or a server | [Python](#python) | Mac |
-| A script or a terminal tool | [Command line](#command-line) | Mac |
-| A web page | [Browser](#browser): one page, no build step | Mac, Chromium-based browser |
-| An Android app | [Android](#android) | Galaxy F62: the engine and its text; **an app built on it has not been run** |
-| A C or C++ program | [C](#c-and-c) | Mac; Galaxy F62 with the Linux arm64 library |
-| An iOS app | [iOS](#ios) | **Not run** |
+| You are building | Use | Download per language | Set the language? |
+|---|---|---|---|
+| Python app or server | `pip install shruti-onnx` | 32 MB, or 53 MB for low memory | Yes |
+| Web page or Node | `npm i shruti-onnx onnxruntime-web` | 32 MB | Yes |
+| Android app | sherpa-onnx pack, with a [sample app](onnx/samples/android/) | 53 MB | No, always detected |
+| Desktop app in C or C++ | sherpa-onnx pack, with a [sample](onnx/samples/cpp/) | 53 MB | No, always detected |
+| iOS app | sherpa-onnx pack, with [Swift code](onnx/samples/ios/). **Not yet run on an iPhone** | 53 MB | No, always detected |
+| A faster, lighter phone app, or live word-by-word text | [Cactus needle engine](onnx/docs/integrate.md#the-engine-route), with a [C sample](onnx/samples/engine-c/) | 29.5 to 29.7 MB | Yes |
 
-Every language follows the pattern below, with its own name in place of `tamil`. Hindi is the one exception: `udgamlabs/Shruti`, `shruti.cact`.
+```python
+from shruti_onnx import Shruti
 
-### Python
+asr = Shruti.load("urdu")                     # any of the 22, by word or code
+print(asr.transcribe("clip.wav")["text"])
+```
+
+```js
+import * as ort from "onnxruntime-web";
+import { createShruti } from "shruti-onnx";
+
+const asr = await createShruti({ ort, language: "urdu" });
+const { text } = await asr.transcribe(samples16k);   // Float32Array, 16 kHz mono
+```
+
+[`onnx/samples/browser/`](onnx/samples/browser/) is one page with a language picker and no build step, and it works offline after the first load.
+
+The engine, with the language's own file:
 
 ```bash
-python3 -m venv .venv && . .venv/bin/activate
 pip install cactus-needle
 hf download udgamlabs/shruti-tamil shruti-tamil.cact --local-dir .
 ```
@@ -75,78 +90,31 @@ print(model.transcribe("clip.wav")["text"])                    # the language is
 print(model.transcribe("english.wav", language="en")["text"])  # only for speech that is entirely English
 ```
 
-### Command line
+**The engine or sherpa-onnx on a phone?** On a five-year-old phone with 6 GB of RAM, measured on Hindi, the needle engine takes about 1.5 s for a 10-second clip
+including loading, in 63 MB. The sherpa-onnx pack takes about 2.4 s after a 3.4 s load, in about 190 MB. sherpa-onnx is easier to add to an app;
+the engine is faster and lighter.
 
-```bash
-git clone --depth 1 https://github.com/udgamlabs/shruti && cd shruti
-SHRUTI_MODEL=tamil ./examples/transcribe.sh clip.wav
-SHRUTI_MODEL=tamil ./examples/transcribe.sh clip.wav --audio-stream   # live, word by word
-```
+**How each ONNX build tested.** We test every build against the same model in the engine, set by set, and ask for a match within the 95% interval. A build can miss by making more errors or by making fewer.
+None of the 22 passed every rule. 13 matched on their main sets, with a named miss. **9 failed, and we publish them with the misses stated:**
 
-No Python needed. It downloads the engine and the model once and checks both against their SHA-256.
+- **More errors than the engine on a set:** Hindi, Tamil, Kannada.
+- **More errors on one set and fewer on another:** Odia, which also misses our character check, and Dogri.
+- **Fewer errors than the engine, which still counts as a miss:** Telugu, Punjabi, Konkani, Sindhi.
 
-### Browser
-
-```bash
-git clone --depth 1 https://github.com/udgamlabs/shruti && cd shruti/examples/browser
-python3 -m http.server 8000
-```
-
-Open `http://localhost:8000/?model=tamil`, press Load, and choose an audio file. The page runs the engine's WebAssembly build in a Web Worker and keeps the
-model in the browser's Cache Storage. Copy the folder into your own site: it has no dependencies.
-
-### Android
-
-The engine ships ready-made Android files in [Cactus-Compute/needle3](https://huggingface.co/Cactus-Compute/needle3/tree/3391a1007e7db31d2fe5c69c734bbe93a9c1ce79/android-arm64).
-See it work on your phone first, over USB:
-
-```bash
-curl -fLO https://huggingface.co/Cactus-Compute/needle3/resolve/3391a1007e7db31d2fe5c69c734bbe93a9c1ce79/android-arm64/needle
-curl -fLO https://huggingface.co/udgamlabs/shruti-tamil/resolve/main/shruti-tamil.cact
-adb push needle shruti-tamil.cact clip.wav /data/local/tmp/
-adb shell chmod +x /data/local/tmp/needle
-adb shell "cd /data/local/tmp && ./needle --model shruti-tamil.cact --audio clip.wav --threads 2"
-```
-
-On a five-year-old phone with 6 GB of RAM, a 10-second Hindi clip takes about 1.5 s including loading, in 63 MB. Use 2 threads on phones with two fast cores.
-
-**In your app:** link `android-arm64/libneedle.a` from the same folder through the Android NDK, call the functions in [C](#c-and-c) from JNI, and ship the `.cact`
-file with the app. The library needs the NDK's C++ runtime. We have not yet built and run an app this way.
-
-### C and C++
-
-[`examples/c/transcribe.c`](examples/c/transcribe.c) is one short file. On a Mac with Apple silicon:
-
-```bash
-git clone --depth 1 https://github.com/udgamlabs/shruti && cd shruti
-curl -fLO https://huggingface.co/Cactus-Compute/needle3/resolve/3391a1007e7db31d2fe5c69c734bbe93a9c1ce79/macos-arm64/libneedle.a
-curl -fLO https://huggingface.co/Cactus-Compute/needle3/resolve/3391a1007e7db31d2fe5c69c734bbe93a9c1ce79/macos-arm64/needle.h
-curl -fLO https://huggingface.co/udgamlabs/shruti-tamil/resolve/main/shruti-tamil.cact
-clang -O2 -I. examples/c/transcribe.c libneedle.a -lc++ -o transcribe
-./transcribe shruti-tamil.cact clip.wav          # the whole clip
-./transcribe shruti-tamil.cact clip.wav --live   # one second at a time, words as they are committed
-```
-
-This sample takes a 16-bit, 16 kHz, mono WAV file. The calls that matter are `needle_load`, `needle_transcribe` and `needle_stream_transcribe_process`. Other platforms have their
-own folder in the same repo.
-
-### iOS
-
-**Not run.** The engine ships `ios-arm64/libneedle.a` and `ios-sim-arm64/libneedle.a`, and the C calls above are the same. Link the library in Xcode and ship the `.cact` file with
-the app.
+Every number: [onnx/docs/languages.md](onnx/docs/languages.md). If a build's misses matter for your use, that language's engine file is the original.
 
 **Things to know:**
 
-- **First use needs the network.** The model file downloads once unless you ship it with your app, and the Python package
-  downloads Cactus's engine library on first use. After that it works offline.
-- **Usage counts.** The `cactus-needle` Python package sends anonymous usage counts by default; set `NEEDLE_TELEMETRY=0` to
-  turn that off. The command-line engine and the WebAssembly build make no network calls.
-- **Setting the language.** Leave it on automatic for most uses. Set `en` for speech that is entirely English, and `ne` when
-  you know it's Nepali. The codes: Hindi `hi`, Marathi `mr`, Tamil `ta`, Bengali `bn`, Telugu `te`, Gujarati `gu`, Odia `or`,
-  Kannada `kn`, Urdu `ur`, Malayalam `ml`, Assamese `as`, Sanskrit `sa`, Punjabi `pa`, Bodo `brx`, Dogri `doi`, Kashmiri `ks`,
-  Konkani `kok`, Maithili `mai`, Manipuri `mni`, Nepali `ne`, Santali `sat`, Sindhi `sd`.
-- **Long audio:** the engine handles it, working through it in 30-second windows.
-- **Small differences:** the same model file can write a slightly different word on a different chip. Test on the devices you ship for.
+- **Split long audio.** With the sherpa-onnx pack, split anything over 30 seconds with a voice-activity detector first. The samples do this. The engine handles long audio itself.
+- **Indian English:** detection often takes it for the model's own language. Set `language="en"` in Python, JavaScript or the engine. The
+  sherpa-onnx pack cannot set it.
+- **Quiet:** the packs return nothing on digital silence. Use a voice-activity detector for real-world quiet.
+- **First use needs the network.** The model downloads once unless you ship it with your app. After that it works offline.
+- **Usage counts.** The `cactus-needle` Python package sends anonymous usage counts by default; set `NEEDLE_TELEMETRY=0` to turn that off. The `shruti-onnx` packages, the command-line engine and the
+  WebAssembly build do not.
+- **Not run:** iPhone, Windows, an Android app built on the engine, and a pack bundled inside an Android app.
+
+Full guide: [onnx/docs/integrate.md](onnx/docs/integrate.md). Limits: [onnx/docs/limits.md](onnx/docs/limits.md).
 
 ## How good is it, across the family?
 
