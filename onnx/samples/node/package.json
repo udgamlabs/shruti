@@ -1,0 +1,9 @@
+{
+  "name": "shruti-node-sample",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "onnxruntime-web": "1.30.0",
+    "shruti-onnx": "0.2.0"
+  }
+}

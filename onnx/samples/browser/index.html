@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shruti in the browser</title>
+<style>
+  :root { color-scheme: light dark; --bg: #fff; --fg: #15171a; --muted: #5d6470; --line: #d8dce2; --accent: #1f5fbf; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #111317; --fg: #eceef1; --muted: #9aa2ae; --line: #2c3139; --accent: #7fb0ff; } }
+  body { background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, sans-serif; margin: 0 auto; max-width: 42rem; padding: 16px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  p { margin: 0 0 16px; color: var(--muted); }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+  label { display: flex; flex-direction: column; flex: 1 1 10rem; font-size: .85rem; color: var(--muted); gap: 4px; }
+  select, button { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: var(--fg); min-height: 44px; }
+  button { flex: 1 1 10rem; cursor: pointer; }
+  button.on { border-color: var(--accent); color: var(--accent); }
+  button:disabled, select:disabled { opacity: .5; cursor: default; }
+  #status { min-height: 3em; font-size: .9rem; color: var(--muted); }
+  #text { font-size: 1.15rem; white-space: pre-wrap; overflow-wrap: anywhere; border-top: 1px solid var(--line); padding-top: 16px; }
+  input[type=file] { display: none; }
+</style>
+</head>
+<body>
+<h1>Shruti in the browser</h1>
+<p>Speech to text on your own device. The first load downloads the model; after that this language works offline, and your audio never leaves this page.</p>
+
+<div class="row">
+  <label>Model language <select id="lang"></select></label>
+  <label>Speech is
+    <select id="spoken"></select>
+  </label>
+  <label>Build
+    <select id="variant">
+      <option value="4bit">4-bit, 32 MB download</option>
+      <option value="int8">int8, 53 MB download, less memory</option>
+    </select>
+  </label>
+</div>
+
+<div class="row">
+  <button id="pick" disabled>Open an audio file</button>
+  <button id="mic" disabled>Record</button>
+  <input id="file" type="file" accept="audio/*">
+</div>
+
+<div id="status" role="status">Starting…</div>
+<div id="text" dir="auto"></div>
+
+<script type="module">
+const $ = (id) => document.getElementById(id);
+const RATE = 16000;
+const local = new URLSearchParams(location.search).has("local");  // ?local reads the package and models from a source checkout, for testing
+let worker = null, languages = {}, recorder = null;
+
+function say(text) { $("status").textContent = text; }
+function ready(on) { $("pick").disabled = $("mic").disabled = !on; }
+
+// Offline: sw.js keeps the page, the runtime and every model you have loaded. It must control the page before the model
+// is fetched, or the first download would not be kept.
+async function installOffline() {
+  if (!("serviceWorker" in navigator)) return;
+  await navigator.serviceWorker.register("sw.js");
+  await navigator.serviceWorker.ready;
+  if (!navigator.serviceWorker.controller) {
+    await new Promise((done) => navigator.serviceWorker.addEventListener("controllerchange", done, { once: true }));
+  }
+}
+
+function startModel() {
+  worker?.terminate();  // a fresh worker frees the previous language's memory
+  ready(false);
+  $("text").textContent = "";
+  const language = $("lang").value;
+  try { localStorage.setItem("shruti-language", language); localStorage.setItem("shruti-variant", $("variant").value); } catch {}
+  worker = new Worker(`worker.mjs${local ? "?local" : ""}`, { type: "module" });
+  worker.onerror = (e) => say(`Could not start: ${e.message}`);
+  worker.onmessage = onMessage;
+  worker.postMessage({ type: "load", language, variant: $("variant").value });
+  fillSpoken(language);
+}
+
+function fillSpoken(code) {
+  const name = languages[code];
+  $("spoken").innerHTML = "";
+  for (const [value, label] of [["", `Detect (${name} or English)`], [code, `${name}, or mixed with English`], ["en", "All English"]]) {
+    $("spoken").add(new Option(label, value));
+  }
+}
+
+function onMessage({ data }) {
+  if (data.type === "languages") {
+    languages = data.languages;
+    return;
+  }
+  if (data.type === "status") say(data.text);
+  if (data.type === "loaded") {
+    say(`Ready: ${languages[$("lang").value]}. Loaded in ${(data.ms / 1000).toFixed(1)} s. This language now works offline.`);
+    ready(true);
+  }
+  if (data.type === "error") {
+    say(`Error: ${data.text}`);
+    ready(data.canRetry === true);
+  }
+  if (data.type === "result") {
+    $("text").textContent = data.text || "(no speech found)";
+    const heard = data.language === "en" ? "English" : languages[data.language] ?? "none";
+    say(`${data.seconds.toFixed(1)} s of audio in ${(data.ms / 1000).toFixed(1)} s. Language: ${heard}.`);
+    ready(true);
+  }
+}
+
+// Any format the browser can decode, resampled to 16 kHz mono by the browser.
+async function toSamples(arrayBuffer) {
+  const audio = await new OfflineAudioContext(1, 1, RATE).decodeAudioData(arrayBuffer);
+  const mono = new Float32Array(audio.length);
+  for (let c = 0; c < audio.numberOfChannels; c++) {
+    const channel = audio.getChannelData(c);
+    for (let i = 0; i < mono.length; i++) mono[i] += channel[i] / audio.numberOfChannels;
+  }
+  return mono;
+}
+
+async function transcribe(arrayBuffer) {
+  ready(false);
+  say("Transcribing…");
+  try {
+    const samples = await toSamples(arrayBuffer);
+    worker.postMessage({ type: "transcribe", samples, language: $("spoken").value || null }, [samples.buffer]);
+  } catch (e) {
+    say(`Could not read this audio: ${e.message}`);
+    ready(true);
+  }
+}
+
+$("pick").onclick = () => $("file").click();
+$("file").onchange = async () => {
+  const f = $("file").files[0];
+  if (f) await transcribe(await f.arrayBuffer());
+  $("file").value = "";
+};
+
+$("mic").onclick = async () => {
+  if (recorder) { recorder.stop(); return; }
+  let stream;
+  try {
+    // Plain audio: the model was tested on recordings, not on a call's echo and noise processing.
+    stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+  } catch (e) {
+    say(`No microphone: ${e.message}. It needs https or localhost, and your permission.`);
+    return;
+  }
+  const chunks = [];
+  recorder = new MediaRecorder(stream);
+  recorder.ondataavailable = (e) => chunks.push(e.data);
+  recorder.onstop = async () => {
+    stream.getTracks().forEach((t) => t.stop());
+    recorder = null;
+    $("mic").textContent = "Record";
+    $("mic").classList.remove("on");
+    $("pick").disabled = false;
+    await transcribe(await new Blob(chunks).arrayBuffer());
+  };
+  recorder.start();
+  $("mic").textContent = "Stop";
+  $("mic").classList.add("on");
+  $("pick").disabled = true;
+  say("Listening…");
+};
+
+$("lang").onchange = startModel;
+$("variant").onchange = startModel;
+
+(async () => {
+  try {
+    await installOffline();
+  } catch (e) {
+    say(`Offline use is off: ${e.message}`);
+  }
+  // Ask a short-lived worker for the language list, which comes from the package.
+  const list = new Worker(`worker.mjs${local ? "?local" : ""}`, { type: "module" });
+  list.onerror = (e) => say(`Could not start: ${e.message}`);
+  list.onmessage = ({ data }) => {
+    if (data.type === "error") { say(`Error: ${data.text}`); list.terminate(); return; }
+    if (data.type !== "languages") return;
+    languages = data.languages;
+    list.terminate();
+    const sorted = Object.entries(languages).sort((a, b) => a[1].localeCompare(b[1]));
+    for (const [code, name] of sorted) $("lang").add(new Option(`${name} (${code})`, code));
+    let saved = null, build = null;
+    try { saved = localStorage.getItem("shruti-language"); build = localStorage.getItem("shruti-variant"); } catch {}
+    $("lang").value = languages[saved] ? saved : "hi";
+    if (build) $("variant").value = build;
+    startModel();
+  };
+  list.postMessage({ type: "languages" });
+})();
+</script>
+</body>
+</html>
