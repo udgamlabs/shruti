@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shruti-onnx"
+version = "0.2.0"
+description = "Shruti: offline speech-to-text, one language and English in one small model, in ONNX Runtime (32 MB)."
+requires-python = ">=3.9"
+license = "Apache-2.0"
+readme = "README.md"
+authors = [{ name = "Udgam Labs" }]
+keywords = ["speech-recognition", "speech-to-text", "onnx", "offline", "on-device"]
+dependencies = ["numpy", "onnxruntime>=1.17", "huggingface_hub"]
+
+[project.optional-dependencies]
+audio = ["soundfile", "soxr"]
+
+[project.urls]
+Homepage = "https://huggingface.co/udgamlabs/Shruti-ONNX"
+Source = "https://github.com/udgamlabs/shruti"
+
+[project.scripts]
+shruti-onnx = "shruti_onnx:main"
