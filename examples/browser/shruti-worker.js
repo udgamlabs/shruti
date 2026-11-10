@@ -53,7 +53,9 @@ async function getModel(url, sha256, expectedBytes) {
     var hit = await cache.match(url)
     if (hit) {
       var cached = new Uint8Array(await hit.arrayBuffer())
-      if (isCact(cached)) return { bytes: cached, source: 'cache', saved: true }
+      var cachedOk = isCact(cached)
+      if (cachedOk && sha256 && self.crypto && self.crypto.subtle) cachedOk = (await sha256Hex(cached)) === sha256
+      if (cachedOk) return { bytes: cached, source: 'cache', saved: true }
       await cache.delete(url)
     }
   }
