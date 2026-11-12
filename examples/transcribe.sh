@@ -1,26 +1,27 @@
 #!/usr/bin/env bash
-# Transcribe a WAV file with Shruti using Cactus's needle command-line engine. No Python needed.
+# Transcribe a WAV file with Shruti using Cactus's command-line engine. No Python needed.
 #
 #   ./transcribe.sh clip.wav                          # language detected automatically
 #   ./transcribe.sh talk.wav --audio-stream           # print the words as they are committed, chunk by chunk
 #   ./transcribe.sh english.wav --audio-language en   # only for speech that is entirely English
 #
-# Any further options go straight to the engine (see `needle --help`: --audio-keywords, --audio-word-timestamps,
+# Any further options go straight to the engine (see `cactus --help`: --audio-keywords, --audio-word-timestamps,
 # --threads, ...). The WAV can be 8/16/24/32-bit PCM or float, any channel count and sample rate.
 #
 # The first run downloads two files and checks their SHA-256 before using them:
-#   - the needle engine for this platform (about 1.5 MB) from Cactus-Compute/needle3 on Hugging Face, at a fixed
-#     revision (Apache-2.0, by Cactus Compute)
+#   - the Cactus engine for this platform (about 1.2-1.6 MB) from Cactus-Compute/cactus on Hugging Face, at a fixed
+#     revision, release 4.1.0 (Apache-2.0, by Cactus Compute)
 #   - shruti.cact (29.5 MB) from udgamlabs/Shruti on Hugging Face
 # Both are kept in $SHRUTI_CACHE (default ~/.cache/shruti). After that it runs offline; the engine makes no network calls.
 # Output: one JSON object per line with "text" and "language" (plus "words" and "pending" with --audio-stream).
 #
-# Platforms: macOS on Apple silicon, Linux x86_64 and Linux arm64. On Windows, download windows-x86_64/needle.exe from
-# the same revision and run: needle.exe --model shruti.cact --audio clip.wav
+# Platforms: macOS on Apple silicon, Linux x86_64 and Linux arm64. On Windows, download releases/4.1.0/windows-x86_64/cactus.exe from
+# the same revision and run: cactus.exe --model shruti.cact --audio clip.wav
 set -euo pipefail
 
-NEEDLE_REPO="Cactus-Compute/needle3"
-NEEDLE_REV="3391a1007e7db31d2fe5c69c734bbe93a9c1ce79"
+ENGINE_REPO="Cactus-Compute/cactus"
+ENGINE_REV="4e822c9036be2eb0e47ef556df32a818bb1572ef"
+ENGINE_RELEASE="releases/4.1.0"
 # SHRUTI_MODEL=marathi ./transcribe.sh clip.wav picks Shruti Marathi; the default is Shruti Hindi (see SHA256SUMS).
 case "${SHRUTI_MODEL:-hindi}" in
   hindi)   MODEL_URL="https://huggingface.co/udgamlabs/Shruti/resolve/main/shruti.cact"
@@ -84,12 +85,12 @@ wav=$1
 shift
 [ -f "$wav" ] || die "no such file: $wav"
 
-# The engine build for this machine, and its SHA-256 at revision $NEEDLE_REV.
+# The engine build for this machine, and its SHA-256 at revision $ENGINE_REV.
 case "$(uname -s)-$(uname -m)" in
-  Darwin-arm64) platform=macos-arm64 needle_sha=346c108b7f3eaf8dffa43699ebef251d4d7c5f5257ccf1e225c1d11a15141537 ;;
-  Linux-x86_64 | Linux-amd64) platform=linux-x86_64 needle_sha=388c2b91e1f36bfa29b7a3204310166483f6df7a388110eebf9885f6fcfa89fb ;;
-  Linux-aarch64 | Linux-arm64) platform=linux-arm64 needle_sha=bc2b8cf8e27b92e8ad50ee091c0d461ddd2e27c560d461feca940457af591871 ;;
-  *) die "this script has no engine build for $(uname -s) $(uname -m); see https://huggingface.co/$NEEDLE_REPO" ;;
+  Darwin-arm64) platform=macos-arm64 engine_sha=86c7bad785977c79d935a47604e14df0ef9640297b1b1280d93757a15a87f3f5 ;;
+  Linux-x86_64 | Linux-amd64) platform=linux-x86_64 engine_sha=d3fabf298fed9da8db319c90fbce62c898930699d87c0468b20262860b337098 ;;
+  Linux-aarch64 | Linux-arm64) platform=linux-arm64 engine_sha=088137b428c1be5cacb022a78a56f82815e5d60767002874afcc2ca7cf446074 ;;
+  *) die "this script has no engine build for $(uname -s) $(uname -m); see https://huggingface.co/$ENGINE_REPO" ;;
 esac
 
 sha256() {
@@ -111,10 +112,10 @@ fetch() {
 }
 
 mkdir -p "$CACHE"
-needle="$CACHE/needle-$platform-${NEEDLE_REV:0:7}"
-fetch "https://huggingface.co/$NEEDLE_REPO/resolve/$NEEDLE_REV/$platform/needle" "$needle" "$needle_sha"
-chmod +x "$needle"
+engine="$CACHE/cactus-$platform-${ENGINE_REV:0:7}"
+fetch "https://huggingface.co/$ENGINE_REPO/resolve/$ENGINE_REV/$ENGINE_RELEASE/$platform/cactus" "$engine" "$engine_sha"
+chmod +x "$engine"
 model="$CACHE/${MODEL_URL##*/}"
 fetch "$MODEL_URL" "$model" "$MODEL_SHA256"
 
-exec "$needle" --model "$model" --audio "$wav" "$@"
+exec "$engine" --model "$model" --audio "$wav" "$@"

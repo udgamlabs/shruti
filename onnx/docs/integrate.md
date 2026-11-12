@@ -14,7 +14,7 @@ mixed. Nothing is sent to a server. Pick the route that fits what you are buildi
 | An Android app | [sherpa-onnx pack](#android) | 53 MB | No, always detected | Galaxy F62 |
 | A desktop app in C or C++ | [sherpa-onnx pack](#c-and-c) | 53 MB | No, always detected | Mac |
 | An iOS app | [sherpa-onnx pack](#ios) | 53 MB | No, always detected | **Not run on an iPhone** |
-| A faster, lighter phone app, live word-by-word text, or setting the language on a phone | [Cactus needle engine](#the-engine-route) | 29.5 to 29.7 MB | Yes | Mac, Galaxy F62 |
+| A faster, lighter phone app, live word-by-word text, or setting the language on a phone | [Cactus engine](#the-engine-route) | 29.5 to 29.7 MB | Yes | Mac, Galaxy F62 |
 
 Windows: **not run** on any route.
 
@@ -129,31 +129,31 @@ its `ios-swiftui` example.
 
 ## The engine route
 
-Shruti's original files run in the Cactus needle engine, on Mac, Linux, Windows, Android, iOS and WebAssembly. This is the
+Shruti's original files run in the Cactus engine, on Mac, Linux, Windows, Android, iOS and WebAssembly. This is the
 route with 22 `.cact` files, one per language.
 
 ```bash
-pip install cactus-needle
+pip install cactus-compute
 ```
 
 ```python
-from huggingface_hub import hf_hub_download   # installed with cactus-needle
-from needle import Whistle
+from huggingface_hub import hf_hub_download   # installed with cactus-compute
+from cactus import Whistle
 
 model = Whistle(hf_hub_download("udgamlabs/Shruti", "shruti.cact"))
 print(model.transcribe("clip.wav"))                    # the language is detected
 print(model.transcribe("english.wav", language="en"))  # all-English speech
 ```
 
-The `cactus-needle` Python package sends anonymous usage counts by default; set `NEEDLE_TELEMETRY=0` to turn that off. The
+The `cactus-compute` Python package sends anonymous usage counts by default; set `CACTUS_TELEMETRY=0` to turn that off. The
 command-line engine and the WebAssembly build make no network calls.
 
-From the command line, the `needle` binary needs no Python:
+From the command line, the `cactus` binary ([Cactus-Compute/cactus](https://huggingface.co/Cactus-Compute/cactus/tree/main/releases/4.1.0)) needs no Python:
 
 ```bash
-needle --model shruti.cact --audio clip.wav
-needle --model shruti.cact --audio talk.wav --audio-stream        # live, word by word
-needle --model shruti.cact --audio english.wav --audio-language en
+cactus --model shruti.cact --audio clip.wav
+cactus --model shruti.cact --audio talk.wav --audio-stream        # live, word by word
+cactus --model shruti.cact --audio english.wav --audio-language en
 ```
 
 In a browser, the public repo's `examples/browser/` is one page with no build step that runs the engine's WebAssembly build:
@@ -166,14 +166,14 @@ python3 -m http.server 8000     # then open http://localhost:8000/?model=tamil
 On an Android phone, over USB, the engine's Android binary shows it working before you write any code:
 
 ```bash
-curl -fLO https://huggingface.co/Cactus-Compute/needle3/resolve/3391a1007e7db31d2fe5c69c734bbe93a9c1ce79/android-arm64/needle
+curl -fLO https://huggingface.co/Cactus-Compute/cactus/resolve/4e822c9036be2eb0e47ef556df32a818bb1572ef/releases/4.1.0/android-arm64/cactus
 curl -fLO https://huggingface.co/udgamlabs/shruti-tamil/resolve/main/shruti-tamil.cact
-adb push needle shruti-tamil.cact clip.wav /data/local/tmp/
-adb shell chmod +x /data/local/tmp/needle
-adb shell "cd /data/local/tmp && ./needle --model shruti-tamil.cact --audio clip.wav --threads 2"
+adb push cactus shruti-tamil.cact clip.wav /data/local/tmp/
+adb shell chmod +x /data/local/tmp/cactus
+adb shell "cd /data/local/tmp && ./cactus --model shruti-tamil.cact --audio clip.wav --threads 2"
 ```
 
-In an app, link the engine's C library (`needle.h`: `needle_load`, `needle_transcribe`, `needle_stream_transcribe_process`)
+In an app, link the engine's C library (`cactus.h`: `cactus_load`, `cactus_transcribe`, `cactus_stream_transcribe_process`)
 and ship the `.cact` file with the app. [`samples/engine-c/transcribe.c`](../samples/engine-c/) shows those calls in one short file; we ran it on a Mac and, with the Linux
 arm64 library, on the phone. On Android the library comes from the same repo's `android-arm64/` folder and needs the NDK's C++ runtime; we have not yet built and run an app
 that way. This is the extra work the sherpa-onnx route saves you. Use 2 threads on phones with two fast cores. Details: the

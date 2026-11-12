@@ -1,4 +1,4 @@
-// Transcribe a WAV file with a Shruti model through the Cactus needle engine's C library.
+// Transcribe a WAV file with a Shruti model through the Cactus engine's C library.
 // The same calls work on every platform the engine ships a library for; only the file you link changes.
 //
 //   transcribe model.cact clip.wav            whole clip at once
@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "needle.h"
+#include "cactus.h"
 
 #define OUT_SIZE (1 << 20)
 
@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
     if (argc < 3) { fprintf(stderr, "usage: %s model.cact clip.wav [--live]\n", argv[0]); return 2; }
     long model_size;
     unsigned char *model = read_file(argv[1], &model_size);
-    if (needle_load(model, (unsigned long long)model_size) < 0) { fprintf(stderr, "load: %s\n", needle_last_error()); return 1; }
+    if (cactus_load(model, (unsigned long long)model_size) < 0) { fprintf(stderr, "load: %s\n", cactus_last_error()); return 1; }
 
     int samples;
     float *pcm = read_wav(argv[2], &samples);
@@ -68,14 +68,14 @@ int main(int argc, char **argv) {
     if (argc > 3 && strcmp(argv[3], "--live") == 0) {
         for (int at = 0; at < samples; at += 16000) {
             int n = samples - at < 16000 ? samples - at : 16000;
-            if (needle_stream_transcribe_process(pcm + at, n, NULL, NULL, out, OUT_SIZE) < 0) { fprintf(stderr, "stream: %s\n", needle_last_error()); return 1; }
+            if (cactus_stream_transcribe_process(pcm + at, n, NULL, NULL, out, OUT_SIZE) < 0) { fprintf(stderr, "stream: %s\n", cactus_last_error()); return 1; }
             puts(out);
         }
-        if (needle_stream_transcribe_stop(out, OUT_SIZE) < 0) { fprintf(stderr, "stop: %s\n", needle_last_error()); return 1; }
+        if (cactus_stream_transcribe_stop(out, OUT_SIZE) < 0) { fprintf(stderr, "stop: %s\n", cactus_last_error()); return 1; }
         puts(out);
     } else {
         // NULL language detects it; pass "en" for speech that is entirely English.
-        if (needle_transcribe(pcm, samples, NULL, NULL, 0, out, OUT_SIZE) < 0) { fprintf(stderr, "transcribe: %s\n", needle_last_error()); return 1; }
+        if (cactus_transcribe(pcm, samples, NULL, NULL, 0, out, OUT_SIZE) < 0) { fprintf(stderr, "transcribe: %s\n", cactus_last_error()); return 1; }
         puts(out);
     }
     return 0;

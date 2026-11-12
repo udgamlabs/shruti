@@ -16,5 +16,5 @@ let asr = ShrutiTranscriber(pack: packFolder, vadModel: vadPath)
 let pieces = asr.transcribe(samples16k)   // any length; long audio is split at pauses
 ```
 
-If you only need Shruti on iOS and don't already use sherpa-onnx, the [needle engine](../../docs/integrate.md#the-engine-route) is the other route; it
+If you only need Shruti on iOS and don't already use sherpa-onnx, the [Cactus engine](../../docs/integrate.md#the-engine-route) is the other route; it
 also supports iOS.

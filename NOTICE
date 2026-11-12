@@ -11,7 +11,7 @@ weights on Hindi, English and Hinglish speech (2,732 hours) with quantisation-aw
 This repository includes, in examples/browser/needle/, the WebAssembly build of the Cactus needle engine (needle.js,
 needle.wasm) by Cactus Compute, Inc., copied unmodified from https://huggingface.co/Cactus-Compute/needle3 (revision
 3391a1007e7db31d2fe5c69c734bbe93a9c1ce79), Apache-2.0; see the LICENSE.txt and NOTICE.txt in that folder.
-The other examples download the needle engine (command-line binary or the cactus-needle Python package) from Cactus
+The other examples download the Cactus engine (command-line binary or the cactus-compute Python package) from Cactus
 Compute at run time; it is not included here.
 
 Training data (all licensed for commercial use; credit appreciated):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Transcribe a WAV file with a Shruti model, offline, on this computer.
 
-    pip install cactus-needle
+    pip install cactus-compute
     python transcribe.py clip.wav                     # Shruti Hindi; language detected automatically
     python transcribe.py clip.wav --model marathi     # Shruti Marathi (Marathi and English)
     python transcribe.py clip.wav --model tamil       # Shruti Tamil (Tamil and English)
@@ -27,23 +27,23 @@
     python transcribe.py english.wav --language en    # only for speech that is all English
 
 The first run downloads the model file (shruti.cact, 29.5 MB, from udgamlabs/Shruti; or shruti-marathi.cact, 29.7 MB,
-from udgamlabs/shruti-marathi) from Hugging Face and the cactus-needle package
-downloads Cactus's engine library (needle3); both are cached. After that it runs with no network.
+from udgamlabs/shruti-marathi) from Hugging Face and the cactus-compute package
+downloads Cactus's engine library; both are cached. After that it runs with no network.
 Any WAV works (integer or float samples, any channel count); audio that is not 16 kHz needs `pip install
-"cactus-needle[mic]"` for resampling.
+"cactus-compute[mic]"` for resampling.
 """
 import os
 
-# The cactus-needle Python package sends anonymous usage counts (function name, versions, OS) by default.
+# The cactus-compute Python package sends anonymous usage counts (function name, versions, OS) by default.
 # This example turns that off before the package is imported. Delete this line to leave it on.
-os.environ.setdefault("NEEDLE_TELEMETRY", "0")
+os.environ.setdefault("CACTUS_TELEMETRY", "0")
 
 import argparse  # noqa: E402
 import hashlib  # noqa: E402
 import sys  # noqa: E402
 
-from huggingface_hub import hf_hub_download  # noqa: E402  (installed with cactus-needle)
-from needle import Whistle  # noqa: E402
+from huggingface_hub import hf_hub_download  # noqa: E402  (installed with cactus-compute)
+from cactus import Whistle  # noqa: E402
 
 # One model per language (see SHA256SUMS): Hugging Face repo, file, sha256, its language tag.
 MODELS = {

@@ -47,7 +47,7 @@ One small model per language, each with English, all in the same engine. Each la
 ## Add Shruti to your app
 
 Shruti runs on your user's own device, with no accounts or API keys, and after the first download it works offline. Every one of the 22 languages comes in two forms: a file of about 30 MB for
-the Cactus needle engine, and ONNX builds for ONNX Runtime, the browser and sherpa-onnx.
+the Cactus engine, and ONNX builds for ONNX Runtime, the browser and sherpa-onnx.
 
 | You are building | Use | Download per language | Set the language? |
 |---|---|---|---|
@@ -56,7 +56,7 @@ the Cactus needle engine, and ONNX builds for ONNX Runtime, the browser and sher
 | Android app | sherpa-onnx pack, with a [sample app](onnx/samples/android/) | 53 MB | No, always detected |
 | Desktop app in C or C++ | sherpa-onnx pack, with a [sample](onnx/samples/cpp/) | 53 MB | No, always detected |
 | iOS app | sherpa-onnx pack, with [Swift code](onnx/samples/ios/). **Not yet run on an iPhone** | 53 MB | No, always detected |
-| A faster, lighter phone app, or live word-by-word text | [Cactus needle engine](onnx/docs/integrate.md#the-engine-route), with a [C sample](onnx/samples/engine-c/) | 29.5 to 29.7 MB | Yes |
+| A faster, lighter phone app, or live word-by-word text | [Cactus engine](onnx/docs/integrate.md#the-engine-route), with a [C sample](onnx/samples/engine-c/) | 29.5 to 29.7 MB | Yes |
 
 ```python
 from shruti_onnx import Shruti
@@ -78,12 +78,12 @@ const { text } = await asr.transcribe(samples16k);   // Float32Array, 16 kHz mon
 The engine, with the language's own file:
 
 ```bash
-pip install cactus-needle
+pip install cactus-compute
 hf download udgamlabs/shruti-tamil shruti-tamil.cact --local-dir .
 ```
 
 ```python
-from needle import Whistle
+from cactus import Whistle
 
 model = Whistle("shruti-tamil.cact")
 print(model.transcribe("clip.wav")["text"])                    # the language is chosen automatically
@@ -110,7 +110,7 @@ Every number: [onnx/docs/languages.md](onnx/docs/languages.md). If a build's mis
   sherpa-onnx pack cannot set it.
 - **Quiet:** the packs return nothing on digital silence. Use a voice-activity detector for real-world quiet.
 - **First use needs the network.** The model downloads once unless you ship it with your app. After that it works offline.
-- **Usage counts.** The `cactus-needle` Python package sends anonymous usage counts by default; set `NEEDLE_TELEMETRY=0` to turn that off. The `shruti-onnx` packages, the command-line engine and the
+- **Usage counts.** The `cactus-compute` Python package sends anonymous usage counts by default; set `CACTUS_TELEMETRY=0` to turn that off. The `shruti-onnx` packages, the command-line engine and the
   WebAssembly build do not.
 - **Not run:** iPhone, Windows, an Android app built on the engine, and a pack bundled inside an Android app.
 
@@ -150,10 +150,10 @@ Devanagari vocabulary pieces.
 | Developer | Udgam Labs |
 | Base model | Cactus Whistle (Cactus Compute), Apache-2.0 |
 | Parameters | 55M (8 encoder + 8 decoder layers, width 512) |
-| Files | `shruti.cact`, 29.5 MB (4-bit weights, 8-bit activations) for the Cactus needle engine; `shruti.safetensors`, 222 MB (full-precision fp32 weights, config in the file's metadata) |
+| Files | `shruti.cact`, 29.5 MB (4-bit weights, 8-bit activations) for the Cactus engine; `shruti.safetensors`, 222 MB (full-precision fp32 weights, config in the file's metadata) |
 | Input / output | 16 kHz audio of any length → text; Hindi in Devanagari, English words in lowercase Latin |
 | Languages | Hindi, English, Hinglish (code-mixed). Whistle's other languages (German, French, Spanish, Italian, Dutch, Polish) were not evaluated and are probably weaker after our training |
-| Runtime | [Cactus needle](https://huggingface.co/Cactus-Compute/needle3) engine (Apache-2.0): macOS, Linux, Windows, Android, iOS, WebAssembly |
+| Runtime | [Cactus](https://huggingface.co/Cactus-Compute/cactus) engine (Apache-2.0): macOS, Linux, Windows, Android, iOS, WebAssembly |
 | Licence | Apache-2.0 |
 
 ## Get started
@@ -161,13 +161,13 @@ Devanagari vocabulary pieces.
 **Python** (macOS, Linux, Windows):
 
 ```bash
-pip install cactus-needle
+pip install cactus-compute
 python examples/transcribe.py clip.wav
 ```
 
 ```python
-from huggingface_hub import hf_hub_download   # installed with cactus-needle
-from needle import Whistle
+from huggingface_hub import hf_hub_download   # installed with cactus-compute
+from cactus import Whistle
 
 model = Whistle(hf_hub_download("udgamlabs/Shruti", "shruti.cact"))
 print(model.transcribe("clip.wav"))                    # the language is detected automatically
@@ -176,8 +176,8 @@ print(model.transcribe("english.wav", language="en"))  # only for speech that is
 ```
 
 `transcribe` also takes `keywords=[...]` (names or terms to favour) and `word_timestamps=True`. On first use the package
-downloads Cactus's engine library from Hugging Face and caches it. The `cactus-needle` Python package sends anonymous
-usage counts (function name, versions, OS) by default; `examples/transcribe.py` sets `NEEDLE_TELEMETRY=0` to turn that
+downloads Cactus's engine library from Hugging Face and caches it. The `cactus-compute` Python package sends anonymous
+usage counts (function name, versions, OS) by default; `examples/transcribe.py` sets `CACTUS_TELEMETRY=0` to turn that
 off. The command-line engine and the WebAssembly build make no network calls.
 
 **Command line** (macOS on Apple silicon, Linux x86_64 or arm64; no Python):
@@ -188,10 +188,10 @@ off. The command-line engine and the WebAssembly build make no network calls.
 ./examples/transcribe.sh english.wav --audio-language en   # all-English speech
 ```
 
-The script downloads the `needle` binary for your platform from
-[Cactus-Compute/needle3](https://huggingface.co/Cactus-Compute/needle3) at a fixed revision and `shruti.cact` from
-Hugging Face, checks both SHA-256 hashes, and runs `needle --model shruti.cact --audio clip.wav`. On Windows, download
-`windows-x86_64/needle.exe` from the same repository and run that command directly.
+The script downloads the `cactus` binary for your platform from
+[Cactus-Compute/cactus](https://huggingface.co/Cactus-Compute/cactus/tree/main/releases/4.1.0) at a fixed revision and `shruti.cact` from
+Hugging Face, checks both SHA-256 hashes, and runs `cactus --model shruti.cact --audio clip.wav`. On Windows, download
+`releases/4.1.0/windows-x86_64/cactus.exe` from the same repository and run that command directly.
 
 **In the browser:** [`examples/browser/`](examples/browser/) is a single page with no build step and no dependencies. It
 runs the engine's WebAssembly build in a Web Worker, downloads `shruti.cact` from Hugging Face once, keeps it in the
@@ -204,8 +204,8 @@ cd examples/browser && python3 -m http.server 8000   # then open http://localhos
 The microphone needs a secure page: `http://localhost` or `https`. A working page is at
 [udgamlabs.com/models/shruti](https://udgamlabs.com/models/shruti).
 
-**In an app (Android, iOS):** link the engine's C library (`needle.h`: `needle_load`, `needle_transcribe`,
-`needle_stream_transcribe_process`) and ship `shruti.cact` with the app. Use 2 threads on phones with two fast cores.
+**In an app (Android, iOS):** link the engine's C library (`cactus.h`: `cactus_load`, `cactus_transcribe`,
+`cactus_stream_transcribe_process`) and ship `shruti.cact` with the app. Use 2 threads on phones with two fast cores.
 
 **Language setting.** Leave the language unset: automatic detection scores the same as setting it on Hindi, Hinglish,
 accented Hindi and US English. Set `en` only for speech that is entirely English with an Indian accent, which detection
@@ -214,7 +214,7 @@ often treats as Hindi (Svarah subset: 21.1 with `en` vs 25.8 detected).
 | Example | What it shows |
 |---|---|
 | [`examples/transcribe.py`](examples/transcribe.py) | Python: download, verify and transcribe a WAV file |
-| [`examples/transcribe.sh`](examples/transcribe.sh) | the `needle` command-line engine, with checksums, no Python |
+| [`examples/transcribe.sh`](examples/transcribe.sh) | the `cactus` command-line engine, with checksums, no Python |
 | [`examples/browser/`](examples/browser/) | a web page that transcribes files and the microphone in the browser (WebAssembly) |
 
 To check the model files against [`SHA256SUMS`](SHA256SUMS):
@@ -227,7 +227,7 @@ shasum -a 256 -c SHA256SUMS      # or: sha256sum -c SHA256SUMS
 ## How it works
 
 ```
-audio (any rate) → 16 kHz mono samples → needle engine (C, or WebAssembly in a browser)
+audio (any rate) → 16 kHz mono samples → Cactus engine (C, or WebAssembly in a browser)
                                            └─ Shruti: speech encoder → text decoder (55M, 4-bit) → text + language
 ```
 
