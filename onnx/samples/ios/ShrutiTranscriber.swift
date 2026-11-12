@@ -59,6 +59,14 @@ final class ShrutiTranscriber {
       drain()
       i += Self.window
     }
+    if i < samples.count {
+      // Zero-pad the trailing partial window up to Self.window before handing it to the VAD, the same as
+      // the Android sample does: flush() cannot recover audio that was never submitted.
+      var tail = Array(samples[i..<samples.count])
+      tail.append(contentsOf: repeatElement(Float(0), count: Self.window - tail.count))
+      vad.acceptWaveform(samples: tail)
+      drain()
+    }
     vad.flush()
     drain()
     return pieces.filter { !$0.isEmpty }

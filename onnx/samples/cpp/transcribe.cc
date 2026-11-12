@@ -79,8 +79,17 @@ int main(int argc, char *argv[]) {
       vad.Pop();
     }
   };
-  for (size_t i = 0; i + kWindow <= x.size(); i += kWindow) {
+  const size_t full = (x.size() / kWindow) * kWindow;
+  for (size_t i = 0; i < full; i += kWindow) {
     vad.AcceptWaveform(x.data() + i, kWindow);
+    drain();
+  }
+  if (full < x.size()) {
+    // Zero-pad the trailing partial window up to kWindow before handing it to the VAD, the same as the
+    // Android sample does: Flush() cannot recover audio that was never submitted.
+    std::vector<float> tail(kWindow, 0.0f);
+    std::copy(x.data() + full, x.data() + x.size(), tail.begin());
+    vad.AcceptWaveform(tail.data(), kWindow);
     drain();
   }
   vad.Flush();
